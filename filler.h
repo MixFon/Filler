@@ -11,6 +11,8 @@ typedef struct	s_plyer
 	int			width;
 	int			heith;
 	char		**bourd;
+	int			in_x;
+	int			in_y;
 	
 }				t_plyer;
 

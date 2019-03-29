@@ -106,12 +106,37 @@ t_token *create_token()
 
 	tk = (t_token *)malloc(sizeof(t_token));
 	get_next_line(0, &line);
-	parsing_wh(line,  &tk->width, &tk->heith);
+	parsing_wh(line, &tk->width, &tk->heith);
 	printf("tk->heith = %d tk->width = %d\n", tk->heith, tk->width);
 	free(line);
 	tk->token = infill_arr(tk->heith, 0);
 	return (tk);
+}
 
+/*
+** Reading bourd.
+*/
+
+void	read_bourd(t_plyer *pl)
+{
+	int	i;
+	int	j;
+
+	i = 0;
+	while(i < pl->heith)
+	{
+		j = 0;
+		while(j < pl->width)
+		{
+			if (pl->bourd[i][j] == pl->sym)
+			{
+				pl->in_x = i;
+				pl->in_y = j;
+			}
+			j++;
+		}
+		i++;
+	}
 }
 
 int		main(int ac, char **av)
@@ -121,25 +146,14 @@ int		main(int ac, char **av)
 	char	*line;
 	int		i;
 
-	
-	//get_next_line(0, &line);
 	pl = info_plyer();
-	//create_boudr(pl);
 	tk = create_token();
+	read_bourd(pl);
+	printf("in_x = %d, in_y = %d", pl->in_x, pl->in_y);
 	dell_arr(pl->bourd);
 	dell_arr(tk->token);
 	free(tk->token);
 	free(pl->bourd);
-	ft_putstr("3");
-	ft_putstr(" ");
-	ft_putstr("2");
-	ft_putstr("\n");
-	write(2, "a\n", 2);
-	//}
-	//exit(1);
-	//ft_printf("19 32\n");
-	//write(2, "Hello\n", 6);
-	//free(line);
 	free(pl);
 	return (0);
 }
