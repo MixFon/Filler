@@ -51,6 +51,7 @@ t_plyer	*info_plyer()
 	parsing_wh(line, pl);
 	printf("P %s\n", line);
 	printf("sym %c\n", pl->sym);
+	free(line);
 	return (pl);
 }
 
@@ -65,12 +66,13 @@ int		main(int ac, char **av)
 	pl = info_plyer();
 	//while (1)
 	//{
-		i = 0;
-		while(++i < 66)
+		i = -1;
+		while(i < 66)
 		{
 			get_next_line(0, &line);
 			write(2, line, ft_strlen(line));
 			write(2, "\n", 1);
+			free(line);
 			i++;
 			//ft_printf("%d %d\n", i , i);
 		}
@@ -83,5 +85,7 @@ int		main(int ac, char **av)
 	//exit(1);
 	//ft_printf("19 32\n");
 	//write(2, "Hello\n", 6);
+	free(line);
+	free(pl);
 	return (0);
 }
