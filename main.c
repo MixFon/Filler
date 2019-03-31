@@ -193,6 +193,7 @@ int		main(int ac, char **av)
 	dell_arr(tk->token);
 	free(tk->token);
 	free(br->bourd);
+	free(tk);
 	free(br);
 	return (0);
 }
