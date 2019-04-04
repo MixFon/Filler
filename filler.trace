@@ -1,4 +1,6 @@
-seed = 3485
-resources/players/carli.filler won
+seed = 1207
+X: timedout
+./a.filler: Segfault at 0
+./resources/players/abanlin.filler won
 Score:
-201AGAINST192
+170AGAINST0

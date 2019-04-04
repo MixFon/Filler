@@ -1,4 +1,14 @@
-
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: widraugr <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2019/04/04 13:45:41 by widraugr          #+#    #+#             */
+/*   Updated: 2019/04/04 16:32:22 by widraugr         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "filler.h"
 
@@ -75,8 +85,12 @@ t_bourd	*info_bourd()
 
 	if(!(br = (t_bourd *)malloc(sizeof(t_bourd))))
 		return (NULL);
-	get_next_line(0, &line);
-	printf("line {%s}\n", line);
+	if(get_next_line(0, &line) == 0)
+	{
+		write(2, "a\n", 2);
+		write(2, line, ft_strlen(line));
+	}
+	//printf("line {%s}\n", line);
 	if (line[10] == '1')
 		br->sym = 'O';
 	else	if (line[10] == '2')
@@ -86,10 +100,10 @@ t_bourd	*info_bourd()
 	free(line);
 	get_next_line(0, &line);
 	parsing_wh(line,  &br->width, &br->heith);
-	printf("P %s\n", line);
-	printf("sym %c\n", br->sym);
+	//printf("P %s\n", line);
+	//printf("sym %c\n", br->sym);
 	free(line);
-	printf("heith = %d width = %d\n", br->heith, br->width);
+	//printf("heith = %d width = %d\n", br->heith, br->width);
 	get_next_line(0, &line);
 	free(line);
 	br->bourd = infill_arr(br->heith, 4);
@@ -135,7 +149,7 @@ void	infill_coor_tok(t_token *tk)
 			}
 		}
 	}
-	print_coor_tok(tk);
+	//print_coor_tok(tk);
 }
 
 /*
@@ -150,7 +164,7 @@ t_token *create_token()
 	tk = (t_token *)malloc(sizeof(t_token));
 	get_next_line(0, &line);
 	parsing_wh(line, &tk->width, &tk->heith);
-	printf("tk->heith = %d tk->width = %d\n", tk->heith, tk->width);
+	//printf("tk->heith = %d tk->width = %d\n", tk->heith, tk->width);
 	free(line);
 	tk->token = infill_arr(tk->heith, 0);
 	infill_coor_tok(tk);
@@ -161,9 +175,22 @@ t_token *create_token()
 ** Check insert token.
 */
 
-int		check_insert_tok(t_bourd *br, t_token *tk)
+int		check_insert_tok(t_bourd *br, t_token *tk, int i, int j)
 {
+	int		iter;
+	int		bl;
 
+	iter = -1;
+	bl = 0;
+	if (i + tk->heith > br->heith || j + tk->width > br->width )
+		return (0);
+	while (++iter < tk->iter)
+	{
+		if (br->bourd[i + tk->coor_x[iter]][j + tk->coor_y[iter]] == br->sym)
+			bl++;
+	}
+	if (bl == 1)
+		return (1);
 	return (0);
 }
 
@@ -182,10 +209,11 @@ void	read_bourd(t_bourd *br, t_token *tk)
 		j = -1;
 		while(++j < br->width)
 		{
-			if (br->bourd[i][j] == br->sym)
+			if (check_insert_tok(br, tk, i, j))
 			{
 				br->in_x = i;
 				br->in_y = j;
+				return ;	//Фиксирует первое удожное место вставки ближе к верхнему левому углу. Если убрать, то по последнему 	
 			}
 		}
 	}
@@ -196,16 +224,23 @@ int		main(int ac, char **av)
 	t_bourd *br;
 	t_token	*tk;
 	char	*line;
+	int		i;
 
-	br = info_bourd();
-	tk = create_token();
-	read_bourd(br, tk);
-	printf("in_x = %d, in_y = %d\n", br->in_x, br->in_y);
-	dell_arr(br->bourd);
-	dell_arr(tk->token);
-	free(tk->token);
-	free(br->bourd);
-	free(tk);
-	free(br);
+	i = 0;
+	while (i < 2)
+	{
+		br = info_bourd();
+		tk = create_token();
+		read_bourd(br, tk);
+		//printf("in_x = %d, in_y = %d\n", br->in_x, br->in_y);
+		printf("%d %d\n", br->in_x, br->in_y);
+		dell_arr(br->bourd);
+		dell_arr(tk->token);
+		free(tk->token);
+		free(br->bourd);
+		free(tk);
+		free(br);
+		i++;
+	}
 	return (0);
 }
