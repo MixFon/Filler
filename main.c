@@ -64,6 +64,7 @@ char	**infill_arr(int hieth, int iter)
 
 /*
 ** Collect information abour the bourd.
+** Sym X or O. Create arr bourd.
 */
 
 t_bourd	*info_bourd()
@@ -75,7 +76,7 @@ t_bourd	*info_bourd()
 	if(!(br = (t_bourd *)malloc(sizeof(t_bourd))))
 		return (NULL);
 	get_next_line(0, &line);
-	printf("line %s\n", line);
+	printf("line {%s}\n", line);
 	if (line[10] == '1')
 		br->sym = 'O';
 	else	if (line[10] == '2')
@@ -105,7 +106,8 @@ void	print_coor_tok(t_token *tk)
 
 	i = -1;
 	while (++i < tk->iter)
-		printf("i = %d, coor_x =  %d, coor_y %d\n", i, tk->coor_x[i], tk->coor_y[i]);
+		printf("i = %d, coor_x =  %d, coor_y %d\n",
+				i, tk->coor_x[i], tk->coor_y[i]);
 }
 
 /*
@@ -156,10 +158,20 @@ t_token *create_token()
 }
 
 /*
+** Check insert token.
+*/
+
+int		check_insert_tok(t_bourd *br, t_token *tk)
+{
+
+	return (0);
+}
+
+/*
 ** Reading bourd.
 */
 
-void	read_bourd(t_bourd *br)
+void	read_bourd(t_bourd *br, t_token *tk)
 {
 	int	i;
 	int	j;
@@ -187,7 +199,7 @@ int		main(int ac, char **av)
 
 	br = info_bourd();
 	tk = create_token();
-	read_bourd(br);
+	read_bourd(br, tk);
 	printf("in_x = %d, in_y = %d\n", br->in_x, br->in_y);
 	dell_arr(br->bourd);
 	dell_arr(tk->token);
