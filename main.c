@@ -6,7 +6,7 @@
 /*   By: widraugr <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/04 13:45:41 by widraugr          #+#    #+#             */
-/*   Updated: 2019/04/04 16:32:22 by widraugr         ###   ########.fr       */
+/*   Updated: 2019/04/08 16:34:11 by widraugr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,48 +76,6 @@ char	**infill_arr(int hieth, int iter)
 }
 
 /*
-** Collect information abour the bourd.
-** Sym X or O. Create arr bourd.
-*/
-
-t_bourd	*info_bourd()
-{
-	int		i;
-	char	*line;
-	
-	t_bourd *br;
-
-	if(!(br = (t_bourd *)malloc(sizeof(t_bourd))))
-		return (NULL);
-	if(get_next_line(0, &line) == 0)
-	{
-		//write(2, "No line\n", 8);
-		write(2, line, ft_strlen(line));
-		return (NULL);
-	}
-	//printf("line {%s}\n", line);
-	if (line[10] == '1')
-		br->sym = 'O';
-	else	if (line[10] == '2')
-		br->sym = 'X';
-	else 
-		br->sym = '?';
-	free(line);
-	get_next_line(0, &line);
-	parsing_wh(line,  &br->width, &br->heith);
-	//printf("P %s\n", line);
-	//printf("sym %c\n", br->sym);
-	free(line);
-	//printf("heith = %d width = %d\n", br->heith, br->width);
-	//Пропускаем 12345...
-	get_next_line(0, &line);
-	free(line);
-	br->bourd = infill_arr(br->heith, 4);
-	
-	return (br);
-}
-
-/*
 ** Print coordinates token.
 */
 
@@ -156,7 +114,6 @@ void	infill_coor_tok(t_token *tk)
 			}
 		}
 	}
-	//print_coor_tok(tk);
 }
 
 /*
@@ -171,7 +128,6 @@ t_token *create_token()
 	tk = (t_token *)malloc(sizeof(t_token));
 	get_next_line(0, &line);
 	parsing_wh(line, &tk->width, &tk->heith);
-	//printf("tk->heith = %d tk->width = %d\n", tk->heith, tk->width);
 	free(line);
 	tk->token = infill_arr(tk->heith, 0);
 	infill_coor_tok(tk);
@@ -193,12 +149,53 @@ int		check_insert_tok(t_bourd *br, t_token *tk, int i, int j)
 		return (0);
 	while (++iter < tk->iter)
 	{
-		if (br->bourd[i + tk->coor_x[iter]][j + tk->coor_y[iter]] == br->sym)
+		if (br->bourd[i + tk->coor_x[iter]][j + tk->coor_y[iter]] == br->sym )
 			bl++;
+		if (br->bourd[i + tk->coor_x[iter]][j + tk->coor_y[iter]] == br->enemy_sym)
+			return (0);
 	}
 	if (bl == 1)
 		return (1);
 	return (0);
+}
+
+t_clst	*creat_clst(void)
+{
+	t_clst	*new;
+
+	if (!(new = (t_clst *)malloc(sizeof(t_clst))))
+		return (NULL);
+	new->x_list = 0;
+	new->y_list = 0;
+	new->next = NULL;
+	return (new);
+}
+
+t_clst	*add_list(t_clst *list, int i, int j)
+{
+	t_clst *new;
+
+	if (list == NULL)	
+	{
+		list = creat_clst();
+		list->x_list = i;
+		list->y_list = j;
+		return (list);
+	}
+	new = creat_clst();
+	new->x_list = i;
+	new->y_list = j;
+	new->next = list;
+	return (new);
+}
+
+void	print_list(t_clst *list)
+{
+	while (list != NULL)
+	{
+		ft_printf("list x = %d, y = %d\n", list->x_list, list->x_list);
+		list = list->next;
+	}
 }
 
 /*
@@ -207,10 +204,12 @@ int		check_insert_tok(t_bourd *br, t_token *tk, int i, int j)
 
 void	read_bourd(t_bourd *br, t_token *tk)
 {
-	int	i;
-	int	j;
+	int		i;
+	int		j;
+	t_clst	*list;
 
 	i = -1;
+	list = NULL;
 	while(++i < br->heith)
 	{
 		j = -1;
@@ -218,31 +217,98 @@ void	read_bourd(t_bourd *br, t_token *tk)
 		{
 			if (check_insert_tok(br, tk, i, j))
 			{
+				list = add_list(list, i, j);
 				br->in_x = i;
 				br->in_y = j;
-				return ;	//Фиксирует первое удожное место вставки ближе к верхнему левому углу. Если убрать, то по последнему 	
+				//if (j % 2 == 0)
+				//	continue ;
+				if (br->sym == 'X')
+					return ;
+			//	return ;	//Фиксирует первое удожное место вставки ближе к верхнему левому углу. Если убрать, то по последнему 	
 			}
 		}
 	}
-}
-
-void	print_all_input()
-{
-	char *line;
-
-	write(2, "Begin\n", 6);
-	while (get_next_line(0, &line))
-	{
-		write(2, line, ft_strlen(line));
-		write(2, "\n", 1);
-	}
-	write(2, "End\n", 4);
+	print_list(list);
 }
 
 t_bourd		*read_sym()
 {
 	t_bourd *br;
 	char *line;
+
+	if(!(br = (t_bourd *)malloc(sizeof(t_bourd))))
+		return (NULL);
+	if(get_next_line(0, &line) == 0)
+	{
+		write(2, "No line\n", 8);
+		write(2, line, ft_strlen(line));
+		ft_strdel(&line);
+		return (NULL);
+	}
+	if (line[10] == '1')
+	{
+		br->sym = 'O';
+		br->enemy_sym = 'X';
+	}
+	else	if (line[10] == '2')
+	{
+		br->sym = 'X';
+		br->enemy_sym = 'O';
+	}
+	else 
+		br->sym = '?';
+	ft_strdel(&line);
+	return (br);
+
+}
+
+int		main(void)
+{
+	t_bourd *br;
+	t_token	*tk;
+	char	*line;
+	int		i;
+	int		w;
+
+	i = 0;
+	br = read_sym();
+	while (1)
+	{
+		if((w = get_next_line(0, &line)) == 0)
+		{
+			ft_strdel(&line);
+			return (0);
+		}
+		parsing_wh(line,  &br->width, &br->heith);
+		free(line);
+		get_next_line(0, &line);
+		ft_strdel(&line);
+		br->bourd = infill_arr(br->heith, 4);
+		tk = create_token();
+		read_bourd(br, tk);
+		ft_printf("%d %d\n", br->in_x, br->in_y);
+		dell_arr(br->bourd);
+		dell_arr(tk->token);
+		free(tk->token);
+		free(br->bourd);
+		free(tk);
+
+	}
+	free(br);
+	return (0);
+}
+
+/*
+** Collect information abour the bourd.
+** Sym X or O. Create arr bourd.
+*/
+/*
+t_bourd	*info_bourd()
+{
+	int		i;
+	char	*line;
+	
+	t_bourd *br;
 
 	if(!(br = (t_bourd *)malloc(sizeof(t_bourd))))
 		return (NULL);
@@ -260,52 +326,16 @@ t_bourd		*read_sym()
 	else 
 		br->sym = '?';
 	free(line);
+	get_next_line(0, &line);
+	parsing_wh(line,  &br->width, &br->heith);
+	//printf("P %s\n", line);
+	//printf("sym %c\n", br->sym);
+	free(line);
+	//printf("heith = %d width = %d\n", br->heith, br->width);
+	//Пропускаем 12345...
+	get_next_line(0, &line);
+	free(line);
+	br->bourd = infill_arr(br->heith, 4);
 	return (br);
-
 }
-
-int		main(void)
-{
-	t_bourd *br;
-	t_token	*tk;
-	char	*line;
-	int		i;
-	int		w;
-
-	i = 0;
-	br = read_sym();
-	//while ( 1)
-	{
-	//	br = info_bourd();
-		if((w = get_next_line(0, &line)) == 0)
-		{
-			//printf("w = %d\n", w);
-			//printf("%d %d\n", 16, 30);
-			//continue ;
-		}
-		//OO
-		parsing_wh(line,  &br->width, &br->heith);
-		//printf("P %s\n", line);
-		//printf("sym %c\n", br->sym);
-		free(line);
-		//printf("heith = %d width = %d\n", br->heith, br->width);
-		//Пропускаем 12345...
-		get_next_line(0, &line);
-		free(line);
-		br->bourd = infill_arr(br->heith, 4);
-		//printf("1\n");
-		tk = create_token();
-		read_bourd(br, tk);
-		//printf("in_x = %d, in_y = %d\n", br->in_x, br->in_y);
-		printf("%d %d\n", br->in_x, br->in_y);
-		//printf("%d %d\n", 16, 30);
-		dell_arr(br->bourd);
-		dell_arr(tk->token);
-		free(tk->token);
-		free(br->bourd);
-		free(tk);
-		//free(br);
-		i++;
-	}
-	return (0);
-}
+*/
