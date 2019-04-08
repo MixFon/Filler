@@ -159,6 +159,10 @@ int		check_insert_tok(t_bourd *br, t_token *tk, int i, int j)
 	return (0);
 }
 
+/*
+** Create new list.
+*/
+
 t_clst	*creat_clst(void)
 {
 	t_clst	*new;
@@ -170,6 +174,10 @@ t_clst	*creat_clst(void)
 	new->next = NULL;
 	return (new);
 }
+
+/*
+** Add list in top.
+*/
 
 t_clst	*add_list(t_clst *list, int i, int j)
 {
@@ -189,12 +197,33 @@ t_clst	*add_list(t_clst *list, int i, int j)
 	return (new);
 }
 
+/*
+** Print list.
+*/
+
 void	print_list(t_clst *list)
 {
 	while (list != NULL)
 	{
-		ft_printf("list x = %d, y = %d\n", list->x_list, list->x_list);
+		ft_printf("list x = %d, y = %d\n", list->x_list, list->y_list);
 		list = list->next;
+	}
+}
+
+/*
+** Delete list.
+*/
+
+void	delete_list(t_clst *list)
+{
+	t_clst *prev;
+
+	prev = list;
+	while (list != NULL)
+	{
+		list = list->next;
+		free(prev);
+		prev = list;
 	}
 }
 
@@ -222,13 +251,14 @@ void	read_bourd(t_bourd *br, t_token *tk)
 				br->in_y = j;
 				//if (j % 2 == 0)
 				//	continue ;
-				if (br->sym == 'X')
-					return ;
+				//if (br->sym == 'X')
+				//	return ;
 			//	return ;	//Фиксирует первое удожное место вставки ближе к верхнему левому углу. Если убрать, то по последнему 	
 			}
 		}
 	}
 	print_list(list);
+	delete_list(list);
 }
 
 t_bourd		*read_sym()
