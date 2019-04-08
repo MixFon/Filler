@@ -1,6 +1,4 @@
-seed = 1207
-X: timedout
-./a.filler: Segfault at 0
-./resources/players/abanlin.filler won
+seed = 6615
+./mic.filler won
 Score:
-170AGAINST0
+1AGAINST1

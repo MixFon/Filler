@@ -23,6 +23,8 @@ void	parsing_wh(char *line, int *width, int *heith)
 
 	fir_num = NULL;
 	sec_num = NULL;
+	if (*line == '\0')
+		return ;
 	while(*line != '\0')
 	{
 		if (*line == ' ' && ft_isdigit(*(line + 1)) && !sec_num)
@@ -66,6 +68,7 @@ char	**infill_arr(int hieth, int iter)
 		arr[i] = ft_strdup(line + iter);
 		write(2, arr[i], ft_strlen(arr[i]));
 		write(2, "\n", 1);
+	//	printf("i = %d line {%s}\n", i, arr[i]);
 		free(line);
 	}
 	arr[i] = NULL;
@@ -81,14 +84,16 @@ t_bourd	*info_bourd()
 {
 	int		i;
 	char	*line;
+	
 	t_bourd *br;
 
 	if(!(br = (t_bourd *)malloc(sizeof(t_bourd))))
 		return (NULL);
 	if(get_next_line(0, &line) == 0)
 	{
-		write(2, "a\n", 2);
+		//write(2, "No line\n", 8);
 		write(2, line, ft_strlen(line));
+		return (NULL);
 	}
 	//printf("line {%s}\n", line);
 	if (line[10] == '1')
@@ -104,9 +109,11 @@ t_bourd	*info_bourd()
 	//printf("sym %c\n", br->sym);
 	free(line);
 	//printf("heith = %d width = %d\n", br->heith, br->width);
+	//Пропускаем 12345...
 	get_next_line(0, &line);
 	free(line);
 	br->bourd = infill_arr(br->heith, 4);
+	
 	return (br);
 }
 
@@ -219,27 +226,85 @@ void	read_bourd(t_bourd *br, t_token *tk)
 	}
 }
 
-int		main(int ac, char **av)
+void	print_all_input()
+{
+	char *line;
+
+	write(2, "Begin\n", 6);
+	while (get_next_line(0, &line))
+	{
+		write(2, line, ft_strlen(line));
+		write(2, "\n", 1);
+	}
+	write(2, "End\n", 4);
+}
+
+t_bourd		*read_sym()
+{
+	t_bourd *br;
+	char *line;
+
+	if(!(br = (t_bourd *)malloc(sizeof(t_bourd))))
+		return (NULL);
+	if(get_next_line(0, &line) == 0)
+	{
+		//write(2, "No line\n", 8);
+		write(2, line, ft_strlen(line));
+		return (NULL);
+	}
+	//printf("line {%s}\n", line);
+	if (line[10] == '1')
+		br->sym = 'O';
+	else	if (line[10] == '2')
+		br->sym = 'X';
+	else 
+		br->sym = '?';
+	free(line);
+	return (br);
+
+}
+
+int		main(void)
 {
 	t_bourd *br;
 	t_token	*tk;
 	char	*line;
 	int		i;
+	int		w;
 
 	i = 0;
-	while (i < 2)
+	br = read_sym();
+	//while ( 1)
 	{
-		br = info_bourd();
+	//	br = info_bourd();
+		if((w = get_next_line(0, &line)) == 0)
+		{
+			//printf("w = %d\n", w);
+			//printf("%d %d\n", 16, 30);
+			//continue ;
+		}
+		//OO
+		parsing_wh(line,  &br->width, &br->heith);
+		//printf("P %s\n", line);
+		//printf("sym %c\n", br->sym);
+		free(line);
+		//printf("heith = %d width = %d\n", br->heith, br->width);
+		//Пропускаем 12345...
+		get_next_line(0, &line);
+		free(line);
+		br->bourd = infill_arr(br->heith, 4);
+		//printf("1\n");
 		tk = create_token();
 		read_bourd(br, tk);
 		//printf("in_x = %d, in_y = %d\n", br->in_x, br->in_y);
 		printf("%d %d\n", br->in_x, br->in_y);
+		//printf("%d %d\n", 16, 30);
 		dell_arr(br->bourd);
 		dell_arr(tk->token);
 		free(tk->token);
 		free(br->bourd);
 		free(tk);
-		free(br);
+		//free(br);
 		i++;
 	}
 	return (0);
