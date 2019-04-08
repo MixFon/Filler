@@ -1,4 +1,6 @@
-seed = 9296
-./mic.filler won
+seed = 8656
+X: error on input
+./mic.filler: Segfault at 158
+resources/players/abanlin.filler won
 Score:
-52AGAINST254
+160AGAINST158

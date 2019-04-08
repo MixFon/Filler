@@ -228,6 +228,30 @@ void	delete_list(t_clst *list)
 }
 
 /*
+** Search for the best options.
+*/
+
+void	search_option(t_clst *list, t_bourd *br)
+{
+	int temp;
+
+	temp = list->y_list;
+	br->in_x = list->x_list;
+	br->in_y = list->y_list;
+	while (list != NULL)
+	{
+		if (list->y_list < temp)
+		{
+			temp = list->y_list;
+			br->in_x = list->x_list;
+			br->in_y = list->y_list;
+
+		}
+		list = list->next;
+	}
+}
+
+/*
 ** Reading bourd.
 */
 
@@ -247,8 +271,8 @@ void	read_bourd(t_bourd *br, t_token *tk)
 			if (check_insert_tok(br, tk, i, j))
 			{
 				list = add_list(list, i, j);
-				br->in_x = i;
-				br->in_y = j;
+				//br->in_x = i;
+				//br->in_y = j;
 				//if (j % 2 == 0)
 				//	continue ;
 				//if (br->sym == 'X')
@@ -257,7 +281,8 @@ void	read_bourd(t_bourd *br, t_token *tk)
 			}
 		}
 	}
-	print_list(list);
+	//print_list(list);
+	search_option(list, br);
 	delete_list(list);
 }
 
@@ -322,7 +347,6 @@ int		main(void)
 		free(tk->token);
 		free(br->bourd);
 		free(tk);
-
 	}
 	free(br);
 	return (0);
