@@ -1,6 +1,6 @@
-seed = 8656
+seed = 678
 X: error on input
-./mic.filler: Segfault at 158
-resources/players/abanlin.filler won
+./mic.filler: Segfault at 167
+resources/players/carli.filler won
 Score:
-160AGAINST158
+204AGAINST167

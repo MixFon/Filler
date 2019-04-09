@@ -6,7 +6,7 @@
 /*   By: widraugr <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/04 13:45:41 by widraugr          #+#    #+#             */
-/*   Updated: 2019/04/08 16:34:11 by widraugr         ###   ########.fr       */
+/*   Updated: 2019/04/09 14:27:25 by widraugr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -228,27 +228,120 @@ void	delete_list(t_clst *list)
 }
 
 /*
-** Search for the best options.
+** Track move to fift and up.
 */
 
-void	search_option(t_clst *list, t_bourd *br)
+void	move_left_up(t_clst *list, t_bourd *br)
 {
-	int temp;
+	int temp_x;
+	int temp_y;
 
-	temp = list->y_list;
+	temp_y = list->y_list;
+	temp_x = list->x_list;
 	br->in_x = list->x_list;
 	br->in_y = list->y_list;
 	while (list != NULL)
 	{
-		if (list->y_list < temp)
-		{
-			temp = list->y_list;
+		if (list->y_list < temp_y || list->x_list < temp_x)
+		{ 
+			temp_y = list->y_list;
+			temp_x = list->x_list;
 			br->in_x = list->x_list;
 			br->in_y = list->y_list;
-
 		}
 		list = list->next;
 	}
+}
+
+/*
+** Track move to right and up.
+*/
+
+void	move_right_up(t_clst *list, t_bourd *br)
+{
+	int temp_x;
+	int temp_y;
+
+	temp_y = list->y_list;
+	temp_x = list->x_list;
+	br->in_x = list->x_list;
+	br->in_y = list->y_list;
+	while (list != NULL)
+	{
+		if (list->y_list > temp_y || list->x_list < temp_x)
+		{ 
+			temp_y = list->y_list;
+			temp_x = list->x_list;
+			br->in_x = list->x_list;
+			br->in_y = list->y_list;
+		}
+		list = list->next;
+	}
+}
+
+/*
+** Track move to left.
+*/
+
+void	move_lift(t_clst *list, t_bourd *br)
+{
+	int temp_y;
+
+	temp_y = list->y_list;
+	br->in_x = list->x_list;
+	br->in_y = list->y_list;
+	while (list != NULL)
+	{
+		if (list->y_list < temp_y)
+		{ 
+			temp_y = list->y_list;
+			br->in_x = list->x_list;
+			br->in_y = list->y_list;
+		}
+		list = list->next;
+	}
+}
+
+/*
+** Search for the best options.
+*/
+
+void	search_track(t_clst *list, t_bourd *br)
+{
+	if (br->sym_x[0] + 10 < br->sym_o[0])
+		move_lift(list, br);
+	else
+		move_right_up(list, br);
+}
+
+/*
+** Captures coordinate the first element for X and ending element for O.
+*/
+
+void	first_end(t_bourd *br, int i, int j)
+{
+	if (br->bourd[i][j] == 'X' && br->sym_x[0] == 0 && br->sym_x[1] == 0)
+	{
+		br->sym_x[0] = i;
+		br->sym_x[1] = j;
+	}
+	if (br->bourd[i][j] == 'O')
+	{
+		br->sym_o[0] = i;
+		br->sym_o[1] = j;
+	}
+}	
+
+/*
+** Initialization top X and bottom O zero.
+*/
+
+void	init_zero(t_bourd *br)
+{
+	br->sym_x[0] = 0;
+	br->sym_x[1] = 0;
+	br->sym_o[0] = 0;
+	br->sym_o[1] = 0;
 }
 
 /*
@@ -263,14 +356,16 @@ void	read_bourd(t_bourd *br, t_token *tk)
 
 	i = -1;
 	list = NULL;
+	init_zero(br);
 	while(++i < br->heith)
 	{
 		j = -1;
 		while(++j < br->width)
 		{
 			if (check_insert_tok(br, tk, i, j))
-			{
 				list = add_list(list, i, j);
+			first_end(br, i, j);
+
 				//br->in_x = i;
 				//br->in_y = j;
 				//if (j % 2 == 0)
@@ -278,11 +373,11 @@ void	read_bourd(t_bourd *br, t_token *tk)
 				//if (br->sym == 'X')
 				//	return ;
 			//	return ;	//Фиксирует первое удожное место вставки ближе к верхнему левому углу. Если убрать, то по последнему 	
-			}
 		}
 	}
 	//print_list(list);
-	search_option(list, br);
+	//ft_printf("X %d %d, O %d %d\n", br->sym_x[0], br->sym_x[1], br->sym_o[0], br->sym_o[1]);  
+	search_track(list, br);
 	delete_list(list);
 }
 
@@ -314,7 +409,6 @@ t_bourd		*read_sym()
 		br->sym = '?';
 	ft_strdel(&line);
 	return (br);
-
 }
 
 int		main(void)

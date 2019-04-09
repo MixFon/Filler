@@ -6,13 +6,12 @@
 /*   By: widraugr <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/08 14:27:00 by widraugr          #+#    #+#             */
-/*   Updated: 2019/04/08 16:34:13 by widraugr         ###   ########.fr       */
+/*   Updated: 2019/04/09 11:55:44 by widraugr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef FILLER_H
 # define FILLER_H
-# define OO ft_printf("1\n");
 
 #include "libft/libft.h"
 #include "libft/get_next_line.h"
@@ -26,6 +25,8 @@ typedef struct	s_bourd
 	char			**bourd;
 	int				in_x;
 	int				in_y;
+	int				sym_x[2];
+	int				sym_o[2];
 }					t_bourd;
 
 typedef struct		s_clst
