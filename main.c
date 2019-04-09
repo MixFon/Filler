@@ -6,7 +6,7 @@
 /*   By: widraugr <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/04 13:45:41 by widraugr          #+#    #+#             */
-/*   Updated: 2019/04/09 14:51:34 by widraugr         ###   ########.fr       */
+/*   Updated: 2019/04/09 15:24:56 by widraugr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -268,7 +268,7 @@ void	move_right_up(t_clst *list, t_bourd *br)
 	br->in_y = list->y_list;
 	while (list != NULL)
 	{
-		if (list->y_list > temp_y && list->x_list < temp_x)
+		if (list->y_list > temp_y || list->x_list < temp_x)
 		{ 
 			temp_y = list->y_list;
 			temp_x = list->x_list;
@@ -292,7 +292,7 @@ void	move_lift(t_clst *list, t_bourd *br)
 	br->in_y = list->y_list;
 	while (list != NULL)
 	{
-		if (list->y_list < temp_y)
+		if (list->y_list <= temp_y)
 		{ 
 			temp_y = list->y_list;
 			br->in_x = list->x_list;
@@ -308,10 +308,10 @@ void	move_lift(t_clst *list, t_bourd *br)
 
 void	search_track(t_clst *list, t_bourd *br)
 {
-	if (br->sym_x[0] > br->sym_o[0])
-		move_right_up(list, br);
-	else
+	//if (br->sym_x[0] > br->sym_o[0])
 		move_lift(list, br);
+	//else
+	//	move_right_up(list, br);
 }
 
 /*
