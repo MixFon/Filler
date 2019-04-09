@@ -6,7 +6,7 @@
 /*   By: widraugr <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/04 13:45:41 by widraugr          #+#    #+#             */
-/*   Updated: 2019/04/09 14:27:25 by widraugr         ###   ########.fr       */
+/*   Updated: 2019/04/09 14:51:34 by widraugr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -242,7 +242,7 @@ void	move_left_up(t_clst *list, t_bourd *br)
 	br->in_y = list->y_list;
 	while (list != NULL)
 	{
-		if (list->y_list < temp_y || list->x_list < temp_x)
+		if (list->y_list < temp_y && list->x_list < temp_x)
 		{ 
 			temp_y = list->y_list;
 			temp_x = list->x_list;
@@ -268,7 +268,7 @@ void	move_right_up(t_clst *list, t_bourd *br)
 	br->in_y = list->y_list;
 	while (list != NULL)
 	{
-		if (list->y_list > temp_y || list->x_list < temp_x)
+		if (list->y_list > temp_y && list->x_list < temp_x)
 		{ 
 			temp_y = list->y_list;
 			temp_x = list->x_list;
@@ -308,10 +308,10 @@ void	move_lift(t_clst *list, t_bourd *br)
 
 void	search_track(t_clst *list, t_bourd *br)
 {
-	if (br->sym_x[0] + 10 < br->sym_o[0])
-		move_lift(list, br);
-	else
+	if (br->sym_x[0] > br->sym_o[0])
 		move_right_up(list, br);
+	else
+		move_lift(list, br);
 }
 
 /*
@@ -348,7 +348,7 @@ void	init_zero(t_bourd *br)
 ** Reading bourd.
 */
 
-void	read_bourd(t_bourd *br, t_token *tk)
+int		read_bourd(t_bourd *br, t_token *tk)
 {
 	int		i;
 	int		j;
@@ -375,10 +375,13 @@ void	read_bourd(t_bourd *br, t_token *tk)
 			//	return ;	//Фиксирует первое удожное место вставки ближе к верхнему левому углу. Если убрать, то по последнему 	
 		}
 	}
+	if (list == NULL)
+		return (0);
 	//print_list(list);
 	//ft_printf("X %d %d, O %d %d\n", br->sym_x[0], br->sym_x[1], br->sym_o[0], br->sym_o[1]);  
 	search_track(list, br);
 	delete_list(list);
+	return (1);
 }
 
 t_bourd		*read_sym()
@@ -434,7 +437,9 @@ int		main(void)
 		ft_strdel(&line);
 		br->bourd = infill_arr(br->heith, 4);
 		tk = create_token();
-		read_bourd(br, tk);
+		if (!read_bourd(br, tk))
+			exit(0);
+
 		ft_printf("%d %d\n", br->in_x, br->in_y);
 		dell_arr(br->bourd);
 		dell_arr(tk->token);

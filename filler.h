@@ -6,7 +6,7 @@
 /*   By: widraugr <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/08 14:27:00 by widraugr          #+#    #+#             */
-/*   Updated: 2019/04/09 11:55:44 by widraugr         ###   ########.fr       */
+/*   Updated: 2019/04/09 14:51:35 by widraugr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 # define FILLER_H
 
 #include "libft/libft.h"
+//#include <stdlib.h>
 #include "libft/get_next_line.h"
 
 typedef struct	s_bourd
