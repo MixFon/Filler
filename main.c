@@ -6,7 +6,7 @@
 /*   By: widraugr <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/04 13:45:41 by widraugr          #+#    #+#             */
-/*   Updated: 2019/04/09 15:54:54 by widraugr         ###   ########.fr       */
+/*   Updated: 2019/04/11 11:46:01 by widraugr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -509,7 +509,10 @@ int		main(void)
 		br->bourd = infill_arr(br->heith, 4);
 		tk = create_token();
 		if (!read_bourd(br, tk))
+		{
+			ft_printf("%d %d\n", 0, 0);
 			exit(0);
+		}
 		ft_printf("%d %d\n", br->in_x, br->in_y);
 		dell_arr(br->bourd);
 		dell_arr(tk->token);
