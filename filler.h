@@ -14,7 +14,6 @@
 # define FILLER_H
 
 #include "libft/libft.h"
-//#include <stdlib.h>
 #include "libft/get_next_line.h"
 
 typedef struct	s_bourd
@@ -35,6 +34,7 @@ typedef struct		s_clst
 	int				x_list;
 	int				y_list;
 	struct s_clst	*next;
+	int				sharp;
 }					t_clst;
 
 typedef struct		s_token

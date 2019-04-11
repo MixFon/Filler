@@ -283,7 +283,7 @@ void	move_right_up(t_clst *list, t_bourd *br)
 ** Track move to left.
 */
 
-void	move_lift(t_clst *list, t_bourd *br)
+void	move_left(t_clst *list, t_bourd *br)
 {
 	int temp_y;
 
@@ -303,15 +303,44 @@ void	move_lift(t_clst *list, t_bourd *br)
 }
 
 /*
+** Search overlya whith sharp.
+*/
+
+int		search_sharp(t_clst *list, t_bourd *br, t_token *tk)
+{
+	int	iter;
+
+	while (list != NULL)
+	{
+		iter = -1;
+		while (++iter < tk->iter)	
+		{
+			if(br->bourd[list->x_list + tk->coor_x[iter]]
+					[list->y_list + tk->coor_y[iter]] == '#')
+			{
+
+				br->in_x = list->x_list;
+				br->in_y = list->y_list;
+				return (1);
+			}	
+		}
+		list = list->next;
+	}
+	return (0);
+}
+
+/*
 ** Search for the best options.
 */
 
-void	search_track(t_clst *list, t_bourd *br)
+void	search_track(t_clst *list, t_bourd *br, t_token *tk)
 {
-	//if (br->sym_x[0] > br->sym_o[0])
-		move_lift(list, br);
-	//else
-	//	move_right_up(list, br);
+	if(search_sharp(list, br, tk))
+		return ;
+	if (br->sym_x[0] > br->sym_o[0])
+		move_right_up(list, br);
+	else
+		move_right_up(list, br);
 }
 
 /*
@@ -345,6 +374,62 @@ void	init_zero(t_bourd *br)
 }
 
 /*
+** Print bourd.
+*/
+
+void	print_bourd(char **arr)
+{
+	while (*arr != NULL)
+	{
+		write(2, *arr, ft_strlen(*arr));
+		write(2, "\n", 1);
+		arr++;
+	}
+}
+
+/*
+** Enemy perimetr.
+*/
+
+void	enemy_perimetr(t_bourd *br)
+{
+	int		i;
+	int		j;
+
+	i = -1;
+	while(++i < br->heith)
+	{
+		j = -1;
+		while(++j < br->width)
+		{
+			if (br->bourd[i][j] == '.')
+			{
+				if (i + 1 >= br->heith || j + 1 > br->width || i - 1 < 0
+						|| j - 1 < 0)
+					continue ;
+				if (br->bourd[i + 1][j] == br->enemy_sym)
+					br->bourd[i][j] = '#';
+				if (br->bourd[i - 1][j] == br->enemy_sym)
+					br->bourd[i][j] = '#';
+				if (br->bourd[i][j + 1] == br->enemy_sym)
+					br->bourd[i][j] = '#';
+				if (br->bourd[i][j - 1] == br->enemy_sym)
+					br->bourd[i][j] = '#';
+				if (br->bourd[i + 1][j + 1] == br->enemy_sym)
+					br->bourd[i][j] = '#';
+				if (br->bourd[i - 1][j - 1] == br->enemy_sym)
+					br->bourd[i][j] = '#';
+				if (br->bourd[i - 1][j + 1] == br->enemy_sym)
+					br->bourd[i][j] = '#';
+				if (br->bourd[i + 1][j - 1] == br->enemy_sym)
+					br->bourd[i][j] = '#';
+			}
+		}
+	}
+	print_bourd(br->bourd);
+}
+
+/*
 ** Reading bourd.
 */
 
@@ -357,6 +442,7 @@ int		read_bourd(t_bourd *br, t_token *tk)
 	i = -1;
 	list = NULL;
 	init_zero(br);
+	enemy_perimetr(br);
 	while(++i < br->heith)
 	{
 		j = -1;
@@ -365,21 +451,13 @@ int		read_bourd(t_bourd *br, t_token *tk)
 			if (check_insert_tok(br, tk, i, j))
 				list = add_list(list, i, j);
 			first_end(br, i, j);
-
-				//br->in_x = i;
-				//br->in_y = j;
-				//if (j % 2 == 0)
-				//	continue ;
-				//if (br->sym == 'X')
-				//	return ;
-			//	return ;	//Фиксирует первое удожное место вставки ближе к верхнему левому углу. Если убрать, то по последнему 	
 		}
 	}
 	if (list == NULL)
 		return (0);
 	//print_list(list);
 	//ft_printf("X %d %d, O %d %d\n", br->sym_x[0], br->sym_x[1], br->sym_o[0], br->sym_o[1]);  
-	search_track(list, br);
+	search_track(list, br, tk);
 	delete_list(list);
 	return (1);
 }
@@ -392,12 +470,7 @@ t_bourd		*read_sym()
 	if(!(br = (t_bourd *)malloc(sizeof(t_bourd))))
 		return (NULL);
 	if(get_next_line(0, &line) == 0)
-	{
-		write(2, "No line\n", 8);
-		write(2, line, ft_strlen(line));
-		ft_strdel(&line);
 		return (NULL);
-	}
 	if (line[10] == '1')
 	{
 		br->sym = 'O';
@@ -408,8 +481,6 @@ t_bourd		*read_sym()
 		br->sym = 'X';
 		br->enemy_sym = 'O';
 	}
-	else 
-		br->sym = '?';
 	ft_strdel(&line);
 	return (br);
 }
@@ -432,14 +503,13 @@ int		main(void)
 			return (0);
 		}
 		parsing_wh(line,  &br->width, &br->heith);
-		free(line);
+		ft_strdel(&line);
 		get_next_line(0, &line);
 		ft_strdel(&line);
 		br->bourd = infill_arr(br->heith, 4);
 		tk = create_token();
 		if (!read_bourd(br, tk))
 			exit(0);
-
 		ft_printf("%d %d\n", br->in_x, br->in_y);
 		dell_arr(br->bourd);
 		dell_arr(tk->token);
