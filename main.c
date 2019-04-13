@@ -471,6 +471,11 @@ t_bourd		*read_sym()
 		return (NULL);
 	if(get_next_line(0, &line) == 0)
 		return (NULL);
+	if (ft_strncmp(line, "$$$ exec p", 10))
+	{
+		write(1, "Error name playr.\n", 18); 
+		exit(1);
+	}
 	if (line[10] == '1')
 	{
 		br->sym = 'O';
