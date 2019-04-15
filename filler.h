@@ -47,4 +47,13 @@ typedef struct		s_token
 	int				iter;
 }					t_token;
 
+/*
+** File infill_arr.c
+*/
+
+void	parsing_wh(char *line, int *width, int *heith);
+char	**infill_arr(int hieth, int iter);
+void	print_arr(char **arr);
+void	dell_arr(char **arr);
+
 #endif

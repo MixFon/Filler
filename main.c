@@ -13,69 +13,6 @@
 #include "filler.h"
 
 /*
-** Parsing width and heith bourd and token.
-*/
-
-void	parsing_wh(char *line, int *width, int *heith)
-{
-	char *fir_num;
-	char *sec_num;
-
-	fir_num = NULL;
-	sec_num = NULL;
-	if (*line == '\0')
-		return ;
-	while(*line != '\0')
-	{
-		if (*line == ' ' && ft_isdigit(*(line + 1)) && !sec_num)
-			fir_num = (line + 1);
-		if (*line == ' ' && ft_isdigit(*(line + 1)) && fir_num)
-			sec_num = (line + 1);
-		line++;
-	}
-	*heith = ft_atoi(fir_num);
-	*width = ft_atoi(sec_num);
-}
-
-/*
-** Delete arr.
-*/
-
-void	dell_arr(char **arr)
-{
-	while(*arr != NULL)
-	{
-		ft_strdel(arr);
-		arr++;
-	}
-}
-
-/*
-** Infill array (bourd and token).
-*/
-
-char	**infill_arr(int hieth, int iter)
-{
-	int		i;
-	char	*line;
-	char	**arr;
-
-	arr = (char **)malloc(sizeof(char*) * (hieth + 1));
-	i = -1;
-	while (++i < hieth)
-	{
-		get_next_line(0, &line);
-		arr[i] = ft_strdup(line + iter);
-		write(2, arr[i], ft_strlen(arr[i]));
-		write(2, "\n", 1);
-	//	printf("i = %d line {%s}\n", i, arr[i]);
-		free(line);
-	}
-	arr[i] = NULL;
-	return (arr);
-}
-
-/*
 ** Print coordinates token.
 */
 
@@ -374,20 +311,6 @@ void	init_zero(t_bourd *br)
 }
 
 /*
-** Print bourd.
-*/
-
-void	print_bourd(char **arr)
-{
-	while (*arr != NULL)
-	{
-		write(2, *arr, ft_strlen(*arr));
-		write(2, "\n", 1);
-		arr++;
-	}
-}
-
-/*
 ** Enemy perimetr.
 */
 
@@ -426,7 +349,7 @@ void	enemy_perimetr(t_bourd *br)
 			}
 		}
 	}
-	print_bourd(br->bourd);
+	print_arr(br->bourd);
 }
 
 /*
