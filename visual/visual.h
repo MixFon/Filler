@@ -27,6 +27,11 @@ typedef struct	s_vis
 	int			col;
 	int			row;
 	char		**map;
+	char		**map_xr;
+	char		**map_xp;
+	char		**map_obd;
+	char		**map_obl;
+	char		**map_bourd;
 }				t_vis;
 #endif
 

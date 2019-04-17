@@ -1,0 +1,18 @@
+/* XPM */
+static char *bourd10x10[] = {
+/* columns rows colors chars-per-pixel */
+"10 10 1 1 ",
+"X c #6A4849",
+/* pixels */
+"XXXXXXXXXX",
+"XXXXXXXXXX",
+"XXXXXXXXXX",
+"XXXXXXXXXX",
+"XXXXXXXXXX",
+"XXXXXXXXXX",
+"XXXXXXXXXX",
+"XXXXXXXXXX",
+"XXXXXXXXXX",
+"XXXXXXXXXX",
+"XXXXXXXXXX"
+};

@@ -1,0 +1,18 @@
+/* XPM */
+static char *blur_ligth[] = {
+/* columns rows colors chars-per-pixel */
+"10 10 1 1 ",
+"B c #2E94E9",
+/* pixels */
+"BBBBBBBBBB",
+"BBBBBBBBBB",
+"BBBBBBBBBB",
+"BBBBBBBBBB",
+"BBBBBBBBBB",
+"BBBBBBBBBB",
+"BBBBBBBBBB",
+"BBBBBBBBBB",
+"BBBBBBBBBB",
+"BBBBBBBBBB",
+"BBBBBBBBBB"
+};

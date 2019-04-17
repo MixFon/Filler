@@ -62,7 +62,7 @@ void	print_arr(char **arr)
 	i = 0;
 	while (*arr != NULL)
 	{
-		ft_printf("i = %d, '%s'\n", i, *arr);
+		//ft_printf("i = %d, '%s'\n", i, *arr);
 		//write(2, *arr, ft_strlen(*arr));
 		//write(2, "\n", 1);
 		i++;

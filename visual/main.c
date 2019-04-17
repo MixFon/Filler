@@ -36,6 +36,101 @@ void	rewrite_arr(t_vis *vis)
 	vis->map[i] = NULL;
 }
 
+char	**crea_color_map(int heith, int width, const char *color)
+{
+	char	**map;
+	int		i;
+	int		j;
+
+	map = (char **)malloc(sizeof(char *) * (heith + 3));
+	map[0] = ft_multi_strdup(4, ft_itoa(heith), " ", ft_itoa(width), " 1 1 "); 
+	ft_printf("s = {%s}\n", map[0]);
+	map[1] = ft_multi_strdup(2, "b c #", color);
+	ft_printf("s = {%s}\n", map[1]);
+	i = 1;
+	while (++i < heith + 2)
+	{
+		j = -1;
+		map[i] = ft_strnew(width);
+		while (++j < width)
+			map[i][j] = 'b';
+		ft_printf("i = %d s = {%s}\n",i,  map[i]);
+	}
+	map[i] = NULL;
+	ft_printf("s = {%s}\n", "map[i]");
+	return (map);
+}
+
+/*
+** Init image size 10x10.
+*/
+
+int		init_image10x10(t_vis *vis)
+{
+	if(!(vis->img_back = mlx_xpm_file_to_image(vis->mlx_ptr,
+			"./background.xpm", &vis->heith, &vis->width)))
+		return (0);
+	if(!(vis->img_bourd = mlx_xpm_file_to_image(vis->mlx_ptr,
+			"./image/bourd10x10.xpm", &vis->heith, &vis->width)))
+		return (0);
+	if(!(vis->img_obd = mlx_xpm_file_to_image(vis->mlx_ptr,
+			"./image/blue_dark10x10.xpm", &vis->heith, &vis->width)))
+		return (0);
+	if(!(vis->img_obl = mlx_xpm_file_to_image(vis->mlx_ptr,
+			"./image/blue_ligth10x10.xpm", &vis->heith, &vis->width)))
+		return (0);
+	if(!(vis->img_xp = mlx_xpm_file_to_image(vis->mlx_ptr,
+			"./image/pink10x10.xpm", &vis->heith, &vis->width)))
+		return (0);
+	vis->map_xr = crea_color_map(vis->heith, vis->width, "BF2956");
+	if(!(vis->img_xr = mlx_xpm_to_image(vis->mlx_ptr,
+			vis->map_xr, &vis->heith, &vis->width)))
+	{
+		ft_printf("error image\n");
+		return (0);
+	}
+	ft_putstr("222hello\n");
+	/*
+	if(!(vis->img_xr = mlx_xpm_file_to_image(vis->mlx_ptr,
+			"./image/red10x10.xpm", &vis->heith, &vis->width)))
+	{
+		ft_printf("error image\n");
+		return (0);
+	}
+	*/
+	return (1);
+}
+
+/*
+** Init image size 16x16.
+*/
+
+int		init_image16x16(t_vis *vis)
+{
+	if(!(vis->img_back = mlx_xpm_file_to_image(vis->mlx_ptr,
+			"./background.xpm", &vis->heith, &vis->width)))
+		return (0);
+	if(!(vis->img_bourd = mlx_xpm_file_to_image(vis->mlx_ptr,
+			"./image/bourd.xpm", &vis->heith, &vis->width)))
+		return (0);
+	if(!(vis->img_obd = mlx_xpm_file_to_image(vis->mlx_ptr,
+			"./image/blue_dark.xpm", &vis->heith, &vis->width)))
+		return (0);
+	if(!(vis->img_obl = mlx_xpm_file_to_image(vis->mlx_ptr,
+			"./image/blue_ligth.xpm", &vis->heith, &vis->width)))
+		return (0);
+	if(!(vis->img_xp = mlx_xpm_file_to_image(vis->mlx_ptr,
+			"./image/pink.xpm", &vis->heith, &vis->width)))
+		return (0);
+	if(!(vis->img_xr = mlx_xpm_file_to_image(vis->mlx_ptr,
+			"./image/red.xpm", &vis->heith, &vis->width)))
+	{
+		ft_printf("error image\n");
+		return (0);
+	}
+	return (1);
+}
+
 /*
 ** Read input. Create size bourd.Create map.
 */
@@ -50,10 +145,10 @@ int		read_input(t_vis *vis)
 		//ft_printf("line1 {%s}\n", line);
 		if (*line == '<')
 			return (0);
-		if(!ft_strncmp(line, "Plateau", 7))
-			parsing_wh(line, &vis->col, &vis->row);
 		if(!ft_strncmp(line, "    0", 5))
 			rewrite_arr(vis);
+		if(!ft_strncmp(line, "== O fin", 8))
+			exit(0);
 		ft_strdel(&line);
 	}
 	//print_arr(vis->map);
@@ -68,7 +163,7 @@ int		read_input(t_vis *vis)
 void	coor_centr(int *x, int *y, int heith, int width)
 {
 	*y = HEITH / 2 - heith / 2;
-	*x = WIDTH / 2 - width / 2;
+	*x = WIDTH / 2 - width / 2 - 100;
 }
 
 /*
@@ -88,16 +183,14 @@ int		print_bourd(t_vis *vis)
 	i = -1;
 	y = 0;
 	read_input(vis);
-	int		col = vis->col;
-	int		row = vis->row;
 	//ft_printf("col = %d, row = %d\n", col, row);
-	coor_centr(&x, &y, row * vis->heith + 1, col * vis->width + 1);
+	coor_centr(&x, &y, vis->row * vis->heith + 1, vis->col * vis->width + 1);
 	y_it = y;
 	x_it = x;
-	while (++i < row)
+	while (++i < vis->row)
 	{
 		j = -1;
-		while (++j < col)
+		while (++j < vis->col)
 		{
 			if (vis->map[i][j] == '.')
 	mlx_put_image_to_window(vis->mlx_ptr, vis->win_ptr, vis->img_bourd, x_it, y_it);
@@ -118,48 +211,67 @@ int		print_bourd(t_vis *vis)
 	//	dell_arr(vis->map);
 	return (0);
 }
-
 /*
-** Init image.
-*/
-
-int		init_image(t_vis *vis)
+int		infill_map(t_vis *vis)
 {
+	
 	if(!(vis->img_back = mlx_xpm_file_to_image(vis->mlx_ptr,
 			"./background.xpm", &vis->heith, &vis->width)))
 		return (0);
-	if(!(vis->img_bourd = mlx_xpm_file_to_image(vis->mlx_ptr,
-			"./image/bourd.xpm", &vis->heith, &vis->width)))
+	if(!(vis->img_back = mlx_xpm_to_image(vis->mlx_ptr,
+			"./background.xpm", &vis->heith, &vis->width)))
 		return (0);
-	if(!(vis->img_obd = mlx_xpm_file_to_image(vis->mlx_ptr,
-			"./image/blue_dark.xpm", &vis->heith, &vis->width)))
-		return (0);
-	if(!(vis->img_obl = mlx_xpm_file_to_image(vis->mlx_ptr,
-			"./image/blue_ligth.xpm", &vis->heith, &vis->width)))
-		return (0);
-	if(!(vis->img_xr = mlx_xpm_file_to_image(vis->mlx_ptr,
-			"./image/red.xpm", &vis->heith, &vis->width)))
-		return (0);
-	if(!(vis->img_xp = mlx_xpm_file_to_image(vis->mlx_ptr,
-			"./image/pink.xpm", &vis->heith, &vis->width)))
-		return (0);
-	return (1);
+	return (0);
+}
+*/
+void	init_image(t_vis *vis)
+{
+	//infill_map(vis);
+
+	if (vis->col < 10 && vis->row < 10)
+	{
+		if(!(init_image16x16(vis)))
+			exit(0);
+	}
+	else
+		if(!(init_image10x10(vis)))
+			exit(0);
 }
 
 t_vis	*create_vis(void)
 {
 	t_vis	*vis;
+	char	*line;
 
 	if(!(vis = (t_vis*)malloc(sizeof(t_vis))))
 		return (NULL);
 	vis->heith = 0;
 	vis->width = 0;
+	vis->col = 0;
+	vis->row= 0;
 	vis->map = NULL;
 	vis->mlx_ptr = mlx_init();
-	if(!(init_image(vis)))
-		return (NULL);
 	vis->win_ptr = mlx_new_window(vis->mlx_ptr, WIDTH, HEITH, "Filler");
+	while (get_next_line(0, &line))
+	{
+		if(!ft_strncmp(line, "Plateau", 7))
+		{
+			parsing_wh(line, &vis->col, &vis->row);
+			ft_strdel(&line);
+			break;
+		}
+		ft_strdel(&line);
+	}
+	//ft_printf("%d %d\n", vis->col, vis->row);
+	init_image(vis);
 	return (vis);
+}
+
+int		exit_key(int key, void *par)
+{
+	if (key == 65307)
+		exit(0);
+	return (0);
 }
 
 int		main(void)
@@ -171,6 +283,7 @@ int		main(void)
 		exit(0);
 	mlx_put_image_to_window(vis->mlx_ptr, vis->win_ptr, vis->img_back, 0, 0);
 	//print_bourd(vis);
+	mlx_key_hook(vis->win_ptr, exit_key, (void*)0);
 	mlx_loop_hook(vis->mlx_ptr, print_bourd, vis);
 	mlx_loop(vis->mlx_ptr);
 }
