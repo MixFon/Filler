@@ -1,5 +1,4 @@
-seed = 2175
-O: error on input
+seed = 4619
 ./mic.filler won
 Score:
-85AGAINST85
+95AGAINST288
