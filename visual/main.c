@@ -61,19 +61,27 @@ char	**crea_color_map(int heith, int width, const char *color)
 	return (map);
 }
 
+int		size_square(t_vis *vis)
+{
+	int i;
+
+	i = -1;
+	while(++i < 20)
+	{
+		if (((HEITH - INDENT) <= vis->row * i)
+				|| ((WIDTH - INDENT) <= vis->col * i))
+			break ;
+	}
+	if(i < 1)
+		return (1);
+	return (i);
+}
+
 void	colc_size_squre(t_vis *vis)
 {
-	if (vis->col < vis->row)
-	{
-		vis->heith = HEITH / (vis->row + 2);
-		vis->width = vis->heith;
-	}
-	else
-	{
-		vis->width = WIDTH / (vis->col + 2);
-		vis->heith = vis->width;
-	}
-
+	ft_printf("square size = %d\n", size_square(vis));
+	vis->heith = size_square(vis);
+	vis->width = vis->heith;
 }
 
 /*
@@ -163,7 +171,7 @@ int		print_bourd(t_vis *vis)
 	y = 0;
 	read_input(vis);
 	//ft_printf("col = %d, row = %d\n", col, row);
-	coor_centr(&x, &y, vis->row * vis->heith + 1, vis->col * vis->width + 1);
+	coor_centr(&x, &y, vis->row * (vis->heith + 1), vis->col * (vis->width + 1));
 	y_it = y;
 	x_it = x;
 	while (++i < vis->row)
@@ -205,13 +213,12 @@ int		init_back(t_vis *vis)
 	if(!(vis->img_bourd = mlx_xpm_to_image(vis->mlx_ptr,
 			vis->map_bourd, &vis->heith, &vis->width)))
 		return (0);
-		*/
+	*/
 	return (1);
 }
 
 void	init_image(t_vis *vis)
 {
-	//infill_map(vis);
 	if(!(init_back(vis)))
 		exit(0);
 	if(!(init_image_squer(vis)))

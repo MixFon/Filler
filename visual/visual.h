@@ -11,6 +11,7 @@
 
 # define WIDTH 1280
 # define HEITH 720
+# define INDENT	200
 
 typedef struct	s_vis
 {
