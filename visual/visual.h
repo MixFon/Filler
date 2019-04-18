@@ -9,8 +9,8 @@
 
 # define ABS(N) ((N<0)?(-N):(N))
 
-# define WIDTH 1024
-# define HEITH 768
+# define WIDTH 1280
+# define HEITH 720
 
 typedef struct	s_vis
 {
@@ -32,6 +32,7 @@ typedef struct	s_vis
 	char		**map_obd;
 	char		**map_obl;
 	char		**map_bourd;
+	char		**map_back;
 }				t_vis;
 #endif
 

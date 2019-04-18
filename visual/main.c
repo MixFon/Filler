@@ -13,7 +13,7 @@ void	new_map(t_vis *vis)
 }
 
 /*
-**  bourd. No malloc.
+**  Rewrite bourd. No malloc.
 */
 
 void	rewrite_arr(t_vis *vis)
@@ -61,26 +61,43 @@ char	**crea_color_map(int heith, int width, const char *color)
 	return (map);
 }
 
+void	colc_size_squre(t_vis *vis)
+{
+	if (vis->col < vis->row)
+	{
+		vis->heith = HEITH / (vis->row + 2);
+		vis->width = vis->heith;
+	}
+	else
+	{
+		vis->width = WIDTH / (vis->col + 2);
+		vis->heith = vis->width;
+	}
+
+}
+
 /*
 ** Init image size 10x10.
 */
 
-int		init_image10x10(t_vis *vis)
+int		init_image_squer(t_vis *vis)
 {
-	if(!(vis->img_back = mlx_xpm_file_to_image(vis->mlx_ptr,
-			"./background.xpm", &vis->heith, &vis->width)))
+	colc_size_squre(vis);
+	vis->map_bourd = crea_color_map(vis->heith, vis->width, "6A4849");
+	if(!(vis->img_bourd = mlx_xpm_to_image(vis->mlx_ptr,
+			vis->map_bourd, &vis->heith, &vis->width)))
 		return (0);
-	if(!(vis->img_bourd = mlx_xpm_file_to_image(vis->mlx_ptr,
-			"./image/bourd10x10.xpm", &vis->heith, &vis->width)))
+	vis->map_obd = crea_color_map(vis->heith, vis->width, "2056B6");
+	if(!(vis->img_obd = mlx_xpm_to_image(vis->mlx_ptr,
+			vis->map_obd, &vis->heith, &vis->width)))
 		return (0);
-	if(!(vis->img_obd = mlx_xpm_file_to_image(vis->mlx_ptr,
-			"./image/blue_dark10x10.xpm", &vis->heith, &vis->width)))
+	vis->map_obl = crea_color_map(vis->heith, vis->width, "2E94E9");
+	if(!(vis->img_obl = mlx_xpm_to_image(vis->mlx_ptr,
+			vis->map_obl, &vis->heith, &vis->width)))
 		return (0);
-	if(!(vis->img_obl = mlx_xpm_file_to_image(vis->mlx_ptr,
-			"./image/blue_ligth10x10.xpm", &vis->heith, &vis->width)))
-		return (0);
-	if(!(vis->img_xp = mlx_xpm_file_to_image(vis->mlx_ptr,
-			"./image/pink10x10.xpm", &vis->heith, &vis->width)))
+	vis->map_xp = crea_color_map(vis->heith, vis->width, "FF6C98");
+	if(!(vis->img_xp = mlx_xpm_to_image(vis->mlx_ptr,
+			vis->map_xp, &vis->heith, &vis->width)))
 		return (0);
 	vis->map_xr = crea_color_map(vis->heith, vis->width, "BF2956");
 	if(!(vis->img_xr = mlx_xpm_to_image(vis->mlx_ptr,
@@ -90,44 +107,6 @@ int		init_image10x10(t_vis *vis)
 		return (0);
 	}
 	ft_putstr("222hello\n");
-	/*
-	if(!(vis->img_xr = mlx_xpm_file_to_image(vis->mlx_ptr,
-			"./image/red10x10.xpm", &vis->heith, &vis->width)))
-	{
-		ft_printf("error image\n");
-		return (0);
-	}
-	*/
-	return (1);
-}
-
-/*
-** Init image size 16x16.
-*/
-
-int		init_image16x16(t_vis *vis)
-{
-	if(!(vis->img_back = mlx_xpm_file_to_image(vis->mlx_ptr,
-			"./background.xpm", &vis->heith, &vis->width)))
-		return (0);
-	if(!(vis->img_bourd = mlx_xpm_file_to_image(vis->mlx_ptr,
-			"./image/bourd.xpm", &vis->heith, &vis->width)))
-		return (0);
-	if(!(vis->img_obd = mlx_xpm_file_to_image(vis->mlx_ptr,
-			"./image/blue_dark.xpm", &vis->heith, &vis->width)))
-		return (0);
-	if(!(vis->img_obl = mlx_xpm_file_to_image(vis->mlx_ptr,
-			"./image/blue_ligth.xpm", &vis->heith, &vis->width)))
-		return (0);
-	if(!(vis->img_xp = mlx_xpm_file_to_image(vis->mlx_ptr,
-			"./image/pink.xpm", &vis->heith, &vis->width)))
-		return (0);
-	if(!(vis->img_xr = mlx_xpm_file_to_image(vis->mlx_ptr,
-			"./image/red.xpm", &vis->heith, &vis->width)))
-	{
-		ft_printf("error image\n");
-		return (0);
-	}
 	return (1);
 }
 
@@ -162,8 +141,8 @@ int		read_input(t_vis *vis)
 
 void	coor_centr(int *x, int *y, int heith, int width)
 {
-	*y = HEITH / 2 - heith / 2;
-	*x = WIDTH / 2 - width / 2 - 100;
+	*y = (HEITH / 2) - (heith / 2);
+	*x = (WIDTH / 2) - (width / 2);
 }
 
 /*
@@ -211,31 +190,32 @@ int		print_bourd(t_vis *vis)
 	//	dell_arr(vis->map);
 	return (0);
 }
+
 /*
-int		infill_map(t_vis *vis)
-{
-	
-	if(!(vis->img_back = mlx_xpm_file_to_image(vis->mlx_ptr,
-			"./background.xpm", &vis->heith, &vis->width)))
-		return (0);
-	if(!(vis->img_back = mlx_xpm_to_image(vis->mlx_ptr,
-			"./background.xpm", &vis->heith, &vis->width)))
-		return (0);
-	return (0);
-}
+** Init background and menu.
 */
+
+int		init_back(t_vis *vis)
+{
+	if(!(vis->img_back = mlx_xpm_file_to_image(vis->mlx_ptr,
+			"./back3.xpm", &vis->heith, &vis->width)))
+		return (0);
+	//vis->map_back = crea_color_map(vis->heith, vis->width, "862F1D");
+	/*
+	if(!(vis->img_bourd = mlx_xpm_to_image(vis->mlx_ptr,
+			vis->map_bourd, &vis->heith, &vis->width)))
+		return (0);
+		*/
+	return (1);
+}
+
 void	init_image(t_vis *vis)
 {
 	//infill_map(vis);
-
-	if (vis->col < 10 && vis->row < 10)
-	{
-		if(!(init_image16x16(vis)))
-			exit(0);
-	}
-	else
-		if(!(init_image10x10(vis)))
-			exit(0);
+	if(!(init_back(vis)))
+		exit(0);
+	if(!(init_image_squer(vis)))
+		exit(0);
 }
 
 t_vis	*create_vis(void)
