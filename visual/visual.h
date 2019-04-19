@@ -13,7 +13,7 @@
 # define HEITH 720
 # define INDENT	200
 
-typedef struct	s_vis
+	typedef struct	s_vis
 {
 	void		*mlx_ptr;
 	void		*win_ptr;
@@ -23,6 +23,7 @@ typedef struct	s_vis
 	void		*img_obl;
 	void		*img_xr;
 	void		*img_xp;
+	void		*img_score;
 	int			heith;
 	int			width;
 	int			col;
@@ -34,6 +35,11 @@ typedef struct	s_vis
 	char		**map_obl;
 	char		**map_bourd;
 	char		**map_back;
+	char		**map_score;
+	char		name_o[30];
+	char		name_x[30];
+	int			score_o;
+	int			score_x;
 }				t_vis;
 #endif
 

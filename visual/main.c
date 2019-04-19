@@ -12,6 +12,18 @@ void	new_map(t_vis *vis)
 	vis->map[i] = NULL;
 }
 
+void	score(char *line, int *score_o, int *score_x)
+{
+	while (*line != '\0')
+	{
+		if(*line == 'o')
+			*score_o = *score_o + 1;
+		if(*line == 'x')
+			*score_x = *score_x + 1;
+		line++;
+	}
+}
+
 /*
 **  Rewrite bourd. No malloc.
 */
@@ -27,10 +39,8 @@ void	rewrite_arr(t_vis *vis)
 	while (++i < vis->row)
 	{
 		get_next_line(0, &line);
+		score(line, &vis->score_o, &vis->score_x);
 		ft_strcpy(vis->map[i], line + 4);
-		//write(2, arr[i], ft_strlen(arr[i]));
-		//write(2, "\n", 1);
-		//ft_printf("i = %d line {%s}\n", i, arr[i]);
 		ft_strdel(&line);
 	}
 	vis->map[i] = NULL;
@@ -43,7 +53,7 @@ char	**crea_color_map(int heith, int width, const char *color)
 	int		j;
 
 	map = (char **)malloc(sizeof(char *) * (heith + 3));
-	map[0] = ft_multi_strdup(4, ft_itoa(heith), " ", ft_itoa(width), " 1 1 "); 
+	map[0] = ft_multi_strdup(4, ft_itoa(width), " ", ft_itoa(heith), " 1 1 "); 
 	ft_printf("s = {%s}\n", map[0]);
 	map[1] = ft_multi_strdup(2, "b c #", color);
 	ft_printf("s = {%s}\n", map[1]);
@@ -51,13 +61,12 @@ char	**crea_color_map(int heith, int width, const char *color)
 	while (++i < heith + 2)
 	{
 		j = -1;
-		map[i] = ft_strnew(width);
+		map[i] = ft_strnew(width + 1);
 		while (++j < width)
 			map[i][j] = 'b';
 		ft_printf("i = %d s = {%s}\n",i,  map[i]);
 	}
 	map[i] = NULL;
-	ft_printf("s = {%s}\n", "map[i]");
 	return (map);
 }
 
@@ -90,7 +99,14 @@ void	colc_size_squre(t_vis *vis)
 
 int		init_image_squer(t_vis *vis)
 {
+	int a = 0;
+	int b = 0;
+
 	colc_size_squre(vis);
+	vis->map_score = crea_color_map(60, 200, "540f0c");
+	if(!(vis->img_score = mlx_xpm_to_image(vis->mlx_ptr,
+			vis->map_score, &a, &b)))
+		return (0);
 	vis->map_bourd = crea_color_map(vis->heith, vis->width, "6A4849");
 	if(!(vis->img_bourd = mlx_xpm_to_image(vis->mlx_ptr,
 			vis->map_bourd, &vis->heith, &vis->width)))
@@ -114,7 +130,6 @@ int		init_image_squer(t_vis *vis)
 		ft_printf("error image\n");
 		return (0);
 	}
-	ft_putstr("222hello\n");
 	return (1);
 }
 
@@ -129,16 +144,12 @@ int		read_input(t_vis *vis)
 	line = NULL;
 	while (get_next_line(0, &line))
 	{
-		//ft_printf("line1 {%s}\n", line);
 		if (*line == '<')
 			return (0);
 		if(!ft_strncmp(line, "    0", 5))
 			rewrite_arr(vis);
-		if(!ft_strncmp(line, "== O fin", 8))
-			exit(0);
 		ft_strdel(&line);
 	}
-	//print_arr(vis->map);
 	return (0);
 }
 
@@ -151,6 +162,23 @@ void	coor_centr(int *x, int *y, int heith, int width)
 {
 	*y = (HEITH / 2) - (heith / 2);
 	*x = (WIDTH / 2) - (width / 2);
+}
+
+/*
+** Print rectangle in down whith scores.
+*/
+
+void	print_score(t_vis *vis)
+{
+	mlx_put_image_to_window(vis->mlx_ptr, vis->win_ptr, vis->img_score, 1040, 660);
+	mlx_string_put(vis->mlx_ptr, vis->win_ptr, 1060, 705, 0x2056B6,
+			vis->name_o);
+	mlx_string_put(vis->mlx_ptr, vis->win_ptr, 1060, 685, 0xBF2956,
+			vis->name_x);
+	mlx_string_put(vis->mlx_ptr, vis->win_ptr, 1200, 705, 0x2056B6,
+			ft_itoa(vis->score_o));
+	mlx_string_put(vis->mlx_ptr, vis->win_ptr, 1200, 685, 0xBF2956,
+		ft_itoa(vis->score_x));
 }
 
 /*
@@ -170,10 +198,10 @@ int		print_bourd(t_vis *vis)
 	i = -1;
 	y = 0;
 	read_input(vis);
-	//ft_printf("col = %d, row = %d\n", col, row);
 	coor_centr(&x, &y, vis->row * (vis->heith + 1), vis->col * (vis->width + 1));
 	y_it = y;
 	x_it = x;
+	print_score(vis);
 	while (++i < vis->row)
 	{
 		j = -1;
@@ -192,7 +220,7 @@ int		print_bourd(t_vis *vis)
 			x_it += vis->width + 1;
 		}
 		x_it = x; 
-		y_it +=  vis->heith + 1;
+		y_it += (vis->heith + 1);
 	}
 	//if (vis->map)
 	//	dell_arr(vis->map);
@@ -208,12 +236,6 @@ int		init_back(t_vis *vis)
 	if(!(vis->img_back = mlx_xpm_file_to_image(vis->mlx_ptr,
 			"./back3.xpm", &vis->heith, &vis->width)))
 		return (0);
-	//vis->map_back = crea_color_map(vis->heith, vis->width, "862F1D");
-	/*
-	if(!(vis->img_bourd = mlx_xpm_to_image(vis->mlx_ptr,
-			vis->map_bourd, &vis->heith, &vis->width)))
-		return (0);
-	*/
 	return (1);
 }
 
@@ -225,22 +247,89 @@ void	init_image(t_vis *vis)
 		exit(0);
 }
 
-t_vis	*create_vis(void)
-{
-	t_vis	*vis;
-	char	*line;
+/*
+** Init value struct.
+*/
 
-	if(!(vis = (t_vis*)malloc(sizeof(t_vis))))
-		return (NULL);
+void	init_val(t_vis *vis)
+{
+	vis->mlx_ptr = NULL;
+	vis->win_ptr = NULL;
+	vis->img_back = NULL;
+	vis->img_bourd = NULL;
+	vis->img_obd = NULL;
+	vis->img_obl = NULL;
+	vis->img_xr = NULL;
+	vis->img_xp = NULL;
 	vis->heith = 0;
 	vis->width = 0;
 	vis->col = 0;
 	vis->row= 0;
 	vis->map = NULL;
+	vis->map_xr = NULL;
+	vis->map_xp = NULL;
+	vis->map_obd = NULL;
+	vis->map_obl = NULL;
+	vis->map_bourd = NULL;
+	vis->map_back = NULL;
+	ft_memset(vis->name_o, '\0', 30);
+	ft_memset(vis->name_x, '\0', 30);
+	vis->score_o = 0;
+	vis->score_x = 0;
+}
+
+char *last_name(char *name, char *line)
+{
+	int len;
+	int i;
+	int j;
+
+	len = ft_strlen(line);
+	i = len;
+	j = -1;
+	while(i >= 0)
+	{
+		if(line[i] == '/' || line[i] == '[')
+			break ;
+		i--;
+	}
+	while(++i < len)
+		name[++j] = line[i];
+	name[j - 1] = '\0';
+	return (name);
+}
+
+/*
+** Get name players.
+*/
+
+void	get_name_players(t_vis *vis, char *line)
+{
+	if(!ft_strncmp(line, "$$$ exec p1", 11))
+	{
+		last_name(vis->name_o, line);	
+		ft_printf("name_o = %s\n", vis->name_o);
+	}
+	else	if(!ft_strncmp(line, "$$$ exec p2", 11))
+	{
+		last_name(vis->name_x, line);	
+		ft_printf("name_x = %s\n", vis->name_x);
+	}
+}
+
+t_vis	*create_vis(void)
+{
+	char	*line;
+	t_vis	*vis;
+
+	if(!(vis = (t_vis*)malloc(sizeof(t_vis))))
+		return (NULL);
+	init_val(vis);
 	vis->mlx_ptr = mlx_init();
 	vis->win_ptr = mlx_new_window(vis->mlx_ptr, WIDTH, HEITH, "Filler");
 	while (get_next_line(0, &line))
 	{
+		get_name_players(vis, line);
 		if(!ft_strncmp(line, "Plateau", 7))
 		{
 			parsing_wh(line, &vis->col, &vis->row);
@@ -249,10 +338,13 @@ t_vis	*create_vis(void)
 		}
 		ft_strdel(&line);
 	}
-	//ft_printf("%d %d\n", vis->col, vis->row);
 	init_image(vis);
 	return (vis);
 }
+
+/*
+** If pressed key esc close programm.
+*/
 
 int		exit_key(int key, void *par)
 {
@@ -269,7 +361,6 @@ int		main(void)
 	if(!(vis = create_vis()))
 		exit(0);
 	mlx_put_image_to_window(vis->mlx_ptr, vis->win_ptr, vis->img_back, 0, 0);
-	//print_bourd(vis);
 	mlx_key_hook(vis->win_ptr, exit_key, (void*)0);
 	mlx_loop_hook(vis->mlx_ptr, print_bourd, vis);
 	mlx_loop(vis->mlx_ptr);
