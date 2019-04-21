@@ -17,9 +17,6 @@ char	**infill_arr(int hieth, int iter)
 	{
 		get_next_line(0, &line);
 		arr[i] = ft_strdup(line + iter);
-		//write(2, arr[i], ft_strlen(arr[i]));
-		//write(2, "\n", 1);
-		//ft_printf("i = %d line {%s}\n", i, arr[i]);
 		ft_strdel(&line);
 	}
 	arr[i] = NULL;
@@ -57,15 +54,12 @@ void	parsing_wh(char *line, int *width, int *heith)
 
 void	print_arr(char **arr)
 {
-	int i;
 
-	i = 0;
 	while (*arr != NULL)
 	{
 		//ft_printf("i = %d, '%s'\n", i, *arr);
-		//write(2, *arr, ft_strlen(*arr));
-		//write(2, "\n", 1);
-		i++;
+		write(2, *arr, ft_strlen(*arr));
+		write(2, "\n", 1);
 		arr++;
 	}
 }
@@ -76,10 +70,8 @@ void	print_arr(char **arr)
 
 void	dell_arr(char **arr)
 {
-	//ft_printf("delete\n");
 	while(*arr != NULL)
 	{
-		//ft_strdel(arr);
 		free(*arr);
 		arr++;
 	}

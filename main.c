@@ -13,20 +13,6 @@
 #include "filler.h"
 
 /*
-** Print coordinates token.
-*/
-
-void	print_coor_tok(t_token *tk)
-{
-	int	i;
-
-	i = -1;
-	while (++i < tk->iter)
-		printf("i = %d, coor_x =  %d, coor_y %d\n",
-				i, tk->coor_x[i], tk->coor_y[i]);
-}
-
-/*
 ** Infill coordinates x and y for token.
 */
 
@@ -34,7 +20,6 @@ void	infill_coor_tok(t_token *tk)
 {
 	int	i;
 	int	j;
-	int	iter;
 
 	i = -1;
 	tk->iter = 0;
@@ -57,15 +42,16 @@ void	infill_coor_tok(t_token *tk)
 ** Create token size widht_tok and heith_tok.
 */
 
-t_token *create_token()
+t_token	*create_token(void)
 {
 	t_token *tk;
 	char	*line;
 
-	tk = (t_token *)malloc(sizeof(t_token));
+	if(!(tk = (t_token *)malloc(sizeof(t_token))))
+		return (NULL);
 	get_next_line(0, &line);
 	parsing_wh(line, &tk->width, &tk->heith);
-	free(line);
+	ft_strdel(&line);
 	tk->token = infill_arr(tk->heith, 0);
 	infill_coor_tok(tk);
 	return (tk);
@@ -135,19 +121,6 @@ t_clst	*add_list(t_clst *list, int i, int j)
 }
 
 /*
-** Print list.
-*/
-
-void	print_list(t_clst *list)
-{
-	while (list != NULL)
-	{
-		ft_printf("list x = %d, y = %d\n", list->x_list, list->y_list);
-		list = list->next;
-	}
-}
-
-/*
 ** Delete list.
 */
 
@@ -165,7 +138,7 @@ void	delete_list(t_clst *list)
 }
 
 /*
-** Track move to fift and up.
+** Track move to left and up.
 */
 
 void	move_left_up(t_clst *list, t_bourd *br)
@@ -179,7 +152,7 @@ void	move_left_up(t_clst *list, t_bourd *br)
 	br->in_y = list->y_list;
 	while (list != NULL)
 	{
-		if (list->y_list < temp_y && list->x_list < temp_x)
+		if (list->y_list < temp_y || list->x_list < temp_x)
 		{ 
 			temp_y = list->y_list;
 			temp_x = list->x_list;
@@ -255,7 +228,6 @@ int		search_sharp(t_clst *list, t_bourd *br, t_token *tk)
 			if(br->bourd[list->x_list + tk->coor_x[iter]]
 					[list->y_list + tk->coor_y[iter]] == '#')
 			{
-
 				br->in_x = list->x_list;
 				br->in_y = list->y_list;
 				return (1);
@@ -274,40 +246,34 @@ void	search_track(t_clst *list, t_bourd *br, t_token *tk)
 {
 	if(search_sharp(list, br, tk))
 		return ;
-	if (br->sym_x[0] > br->sym_o[0])
-		move_right_up(list, br);
+	if (br->sym == 'O')
+		move_left(list, br);
 	else
 		move_right_up(list, br);
 }
 
 /*
-** Captures coordinate the first element for X and ending element for O.
+** Infill perimert.
 */
 
-void	first_end(t_bourd *br, int i, int j)
+void	infil_perimetr(t_bourd *br, int i, int j)
 {
-	if (br->bourd[i][j] == 'X' && br->sym_x[0] == 0 && br->sym_x[1] == 0)
-	{
-		br->sym_x[0] = i;
-		br->sym_x[1] = j;
-	}
-	if (br->bourd[i][j] == 'O')
-	{
-		br->sym_o[0] = i;
-		br->sym_o[1] = j;
-	}
-}	
-
-/*
-** Initialization top X and bottom O zero.
-*/
-
-void	init_zero(t_bourd *br)
-{
-	br->sym_x[0] = 0;
-	br->sym_x[1] = 0;
-	br->sym_o[0] = 0;
-	br->sym_o[1] = 0;
+	if (br->bourd[i + 1][j] == br->enemy_sym)
+		br->bourd[i][j] = '#';
+	if (br->bourd[i - 1][j] == br->enemy_sym)
+		br->bourd[i][j] = '#';
+	if (br->bourd[i][j + 1] == br->enemy_sym)
+		br->bourd[i][j] = '#';
+	if (br->bourd[i][j - 1] == br->enemy_sym)
+		br->bourd[i][j] = '#';
+	if (br->bourd[i + 1][j + 1] == br->enemy_sym)
+		br->bourd[i][j] = '#';
+	if (br->bourd[i - 1][j - 1] == br->enemy_sym)
+		br->bourd[i][j] = '#';
+	if (br->bourd[i - 1][j + 1] == br->enemy_sym)
+		br->bourd[i][j] = '#';
+	if (br->bourd[i + 1][j - 1] == br->enemy_sym)
+		br->bourd[i][j] = '#';
 }
 
 /*
@@ -330,26 +296,10 @@ void	enemy_perimetr(t_bourd *br)
 				if (i + 1 >= br->heith || j + 1 > br->width || i - 1 < 0
 						|| j - 1 < 0)
 					continue ;
-				if (br->bourd[i + 1][j] == br->enemy_sym)
-					br->bourd[i][j] = '#';
-				if (br->bourd[i - 1][j] == br->enemy_sym)
-					br->bourd[i][j] = '#';
-				if (br->bourd[i][j + 1] == br->enemy_sym)
-					br->bourd[i][j] = '#';
-				if (br->bourd[i][j - 1] == br->enemy_sym)
-					br->bourd[i][j] = '#';
-				if (br->bourd[i + 1][j + 1] == br->enemy_sym)
-					br->bourd[i][j] = '#';
-				if (br->bourd[i - 1][j - 1] == br->enemy_sym)
-					br->bourd[i][j] = '#';
-				if (br->bourd[i - 1][j + 1] == br->enemy_sym)
-					br->bourd[i][j] = '#';
-				if (br->bourd[i + 1][j - 1] == br->enemy_sym)
-					br->bourd[i][j] = '#';
+				infil_perimetr(br, i, j);
 			}
 		}
 	}
-	print_arr(br->bourd);
 }
 
 /*
@@ -364,7 +314,6 @@ int		read_bourd(t_bourd *br, t_token *tk)
 
 	i = -1;
 	list = NULL;
-	init_zero(br);
 	enemy_perimetr(br);
 	while(++i < br->heith)
 	{
@@ -373,13 +322,10 @@ int		read_bourd(t_bourd *br, t_token *tk)
 		{
 			if (check_insert_tok(br, tk, i, j))
 				list = add_list(list, i, j);
-			first_end(br, i, j);
 		}
 	}
 	if (list == NULL)
 		return (0);
-	//print_list(list);
-	//ft_printf("X %d %d, O %d %d\n", br->sym_x[0], br->sym_x[1], br->sym_o[0], br->sym_o[1]);  
 	search_track(list, br, tk);
 	delete_list(list);
 	return (1);
@@ -413,83 +359,48 @@ t_bourd		*read_sym()
 	return (br);
 }
 
+/*
+** Delete and free arres.
+*/
+
+void	dell(t_bourd *br, t_token *tk)
+{
+	ft_printf("%d %d\n", br->in_x, br->in_y);
+	dell_arr(br->bourd);
+	dell_arr(tk->token);
+	free(tk->token);
+	free(br->bourd);
+	free(tk);
+
+}
+
 int		main(void)
 {
 	t_bourd *br;
 	t_token	*tk;
 	char	*line;
-	int		i;
-	int		w;
 
-	i = 0;
 	br = read_sym();
 	while (1)
 	{
-		if((w = get_next_line(0, &line)) == 0)
+		if(!get_next_line(0, &line))
 		{
 			ft_strdel(&line);
-			return (0);
+			exit(0);
 		}
 		parsing_wh(line,  &br->width, &br->heith);
 		ft_strdel(&line);
 		get_next_line(0, &line);
 		ft_strdel(&line);
 		br->bourd = infill_arr(br->heith, 4);
-		tk = create_token();
+		if(!(tk = create_token()))
+			exit(0);
 		if (!read_bourd(br, tk))
 		{
-			ft_printf("%d %d\n", 0, 0);
-			exit(0);
+			FINISH
 		}
-		ft_printf("%d %d\n", br->in_x, br->in_y);
-		dell_arr(br->bourd);
-		dell_arr(tk->token);
-		free(tk->token);
-		free(br->bourd);
-		free(tk);
+		dell(br, tk);
 	}
 	free(br);
 	return (0);
 }
-
-/*
-** Collect information abour the bourd.
-** Sym X or O. Create arr bourd.
-*/
-/*
-t_bourd	*info_bourd()
-{
-	int		i;
-	char	*line;
-	
-	t_bourd *br;
-
-	if(!(br = (t_bourd *)malloc(sizeof(t_bourd))))
-		return (NULL);
-	if(get_next_line(0, &line) == 0)
-	{
-		//write(2, "No line\n", 8);
-		write(2, line, ft_strlen(line));
-		return (NULL);
-	}
-	//printf("line {%s}\n", line);
-	if (line[10] == '1')
-		br->sym = 'O';
-	else	if (line[10] == '2')
-		br->sym = 'X';
-	else 
-		br->sym = '?';
-	free(line);
-	get_next_line(0, &line);
-	parsing_wh(line,  &br->width, &br->heith);
-	//printf("P %s\n", line);
-	//printf("sym %c\n", br->sym);
-	free(line);
-	//printf("heith = %d width = %d\n", br->heith, br->width);
-	//Пропускаем 12345...
-	get_next_line(0, &line);
-	free(line);
-	br->bourd = infill_arr(br->heith, 4);
-	return (br);
-}
-*/

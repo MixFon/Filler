@@ -13,8 +13,12 @@
 #ifndef FILLER_H
 # define FILLER_H
 
-#include "libft/ft_printf.h"
-#include "libft/get_next_line.h"
+# include "libft/ft_printf.h"
+# include "libft/get_next_line.h"
+
+# define FINISH ft_printf("%d %d\n", 0, 0);\
+				exit(0);
+
 
 typedef struct	s_bourd
 {
@@ -25,8 +29,6 @@ typedef struct	s_bourd
 	char			**bourd;
 	int				in_x;
 	int				in_y;
-	int				sym_x[2];
-	int				sym_o[2];
 }					t_bourd;
 
 typedef struct		s_clst
