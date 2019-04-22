@@ -1,5 +1,17 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   init.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: widraugr <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2019/04/22 10:52:13 by widraugr          #+#    #+#             */
+/*   Updated: 2019/04/22 16:39:40 by widraugr         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "../include/visual.h"
+
 /*
 ** Read input. Create size bourd.Create map.
 */
@@ -13,12 +25,13 @@ int		read_input(t_vis *vis)
 	{
 		if (*line == '<')
 			return (0);
-		if(!ft_strncmp(line, "    0", 5))
+		if (!ft_strncmp(line, "    0", 5))
 			rewrite_arr(vis);
 		ft_strdel(&line);
 	}
 	return (0);
 }
+
 
 /*
 ** Print matrics of rectengle. Starn coordinate matrics (x, y).
@@ -34,7 +47,8 @@ int		print_bourd(t_vis *vis)
 
 	i = -1;
 	read_input(vis);
-	coor_centr(&x, &y, vis->row * (vis->heith + 1), vis->col * (vis->width + 1));
+	coor_centr(&x, &y, vis->row * (vis->heith + 1),
+			vis->col * (vis->width + 1));
 	vis->y_it = y;
 	vis->x_it = x;
 	print_score(vis);
@@ -46,7 +60,7 @@ int		print_bourd(t_vis *vis)
 			put_square(vis, i, j);
 			vis->x_it += vis->width + 1;
 		}
-		vis->x_it = x; 
+		vis->x_it = x;
 		vis->y_it += (vis->heith + 1);
 	}
 	return (0);
@@ -58,7 +72,7 @@ int		print_bourd(t_vis *vis)
 
 int		init_back(t_vis *vis)
 {
-	if(!(vis->img_back = mlx_xpm_file_to_image(vis->mlx_ptr,
+	if (!(vis->img_back = mlx_xpm_file_to_image(vis->mlx_ptr,
 			IMGPATH, &vis->heith, &vis->width)))
 	{
 		write(2, "Error image background.\n", 24);
@@ -69,9 +83,9 @@ int		init_back(t_vis *vis)
 
 void	init_image(t_vis *vis)
 {
-	if(!(init_back(vis)))
+	if (!(init_back(vis)))
 		exit(0);
-	if(!(init_image_squer(vis)))
+	if (!(init_image_squer(vis)))
 		exit(0);
 }
 
@@ -92,7 +106,7 @@ void	init_val(t_vis *vis)
 	vis->heith = 0;
 	vis->width = 0;
 	vis->col = 0;
-	vis->row= 0;
+	vis->row = 0;
 	vis->map = NULL;
 	vis->map_xr = NULL;
 	vis->map_xp = NULL;

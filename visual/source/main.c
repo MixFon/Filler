@@ -1,7 +1,18 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: widraugr <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2019/04/22 10:45:01 by widraugr          #+#    #+#             */
+/*   Updated: 2019/04/22 16:39:37 by widraugr         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "../include/visual.h"
 
-char *last_name(char *name, char *line)
+char	*last_name(char *name, char *line)
 {
 	int len;
 	int i;
@@ -10,13 +21,13 @@ char *last_name(char *name, char *line)
 	j = -1;
 	len = ft_strlen(line);
 	i = len;
-	while(i >= 0)
+	while (i >= 0)
 	{
-		if(line[i] == '/' || line[i] == '[')
+		if (line[i] == '/' || line[i] == '[')
 			break ;
 		i--;
 	}
-	while(++i < len)
+	while (++i < len)
 		name[++j] = line[i];
 	name[j - 1] = '\0';
 	return (name);
@@ -28,14 +39,14 @@ char *last_name(char *name, char *line)
 
 void	get_name_players(t_vis *vis, char *line)
 {
-	if(!ft_strncmp(line, "$$$ exec p1", 11))
+	if (!ft_strncmp(line, "$$$ exec p1", 11))
 	{
-		last_name(vis->name_o, line);	
+		last_name(vis->name_o, line);
 		ft_printf("name_o = %s\n", vis->name_o);
 	}
-	else	if(!ft_strncmp(line, "$$$ exec p2", 11))
+	else	if (!ft_strncmp(line, "$$$ exec p2", 11))
 	{
-		last_name(vis->name_x, line);	
+		last_name(vis->name_x, line);
 		ft_printf("name_x = %s\n", vis->name_x);
 	}
 }
@@ -49,7 +60,7 @@ t_vis	*create_vis(void)
 	char	*line;
 	t_vis	*vis;
 
-	if(!(vis = (t_vis*)malloc(sizeof(t_vis))))
+	if (!(vis = (t_vis*)malloc(sizeof(t_vis))))
 		return (NULL);
 	init_val(vis);
 	vis->mlx_ptr = mlx_init();
@@ -57,11 +68,11 @@ t_vis	*create_vis(void)
 	while (get_next_line(0, &line))
 	{
 		get_name_players(vis, line);
-		if(!ft_strncmp(line, "Plateau", 7))
+		if (!ft_strncmp(line, "Plateau", 7))
 		{
 			parsing_wh(line, &vis->col, &vis->row);
 			ft_strdel(&line);
-			break;
+			break ;
 		}
 		ft_strdel(&line);
 	}
@@ -75,7 +86,7 @@ t_vis	*create_vis(void)
 
 int		exit_key(int key)
 {
-	if (key == 65307)
+	if (key == ESC)
 		exit(0);
 	return (0);
 }
@@ -84,10 +95,11 @@ int		main(void)
 {
 	t_vis	*vis;
 
-	if(!(vis = create_vis()))
+	if (!(vis = create_vis()))
 		exit(0);
 	mlx_put_image_to_window(vis->mlx_ptr, vis->win_ptr, vis->img_back, 0, 0);
 	mlx_key_hook(vis->win_ptr, exit_key, (void*)0);
+	print_fon(vis);
 	mlx_loop_hook(vis->mlx_ptr, print_bourd, vis);
 	mlx_loop(vis->mlx_ptr);
 }
