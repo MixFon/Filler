@@ -6,13 +6,13 @@
 /*   By: widraugr <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/12/13 14:49:45 by widraugr          #+#    #+#             */
-/*   Updated: 2019/04/25 10:24:06 by widraugr         ###   ########.fr       */
+/*   Updated: 2019/04/26 14:36:15 by widraugr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-void ft_strchr0(char *s, int c)
+void	ft_strchr0(char *s, int c)
 {
 	int i;
 
@@ -23,16 +23,16 @@ void ft_strchr0(char *s, int c)
 		s[i] = 0;
 }
 
-void ft_strzero(char *input, int len)
+void	ft_strzero(char *input, int len)
 {
 	while (len--)
 		input[len] = 0;
 }
 
-int str_process(char *input, char **result)
+int		str_process(char *input, char **result)
 {
-	char*tmp;
-	char*tmp2;
+	char	*tmp;
+	char	*tmp2;
 
 	if (ft_strrchr(input, '\n'))
 	{
@@ -55,10 +55,10 @@ int str_process(char *input, char **result)
 	}
 }
 
-int get_next_line(const int fd, char **line)
+int		get_next_line(const int fd, char **line)
 {
-	static char*buff[10000];
-	int ret;
+	static char	*buff[10000];
+	int			ret;
 
 	if (fd < 0 || !line || BUFF_SIZE <= 0)
 		return (-1);
