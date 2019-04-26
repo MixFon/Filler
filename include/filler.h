@@ -6,7 +6,7 @@
 /*   By: widraugr <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/08 14:27:00 by widraugr          #+#    #+#             */
-/*   Updated: 2019/04/26 13:42:14 by widraugr         ###   ########.fr       */
+/*   Updated: 2019/04/26 14:42:04 by widraugr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,5 +91,5 @@ void				enemy_perimetr(t_bourd *br);
 /*
 ** File main.c
 */
-void	parsing_infillarr(char *line, t_bourd *br);
+void				parsing_infillarr(char *line, t_bourd *br);
 #endif
