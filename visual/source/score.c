@@ -6,7 +6,7 @@
 /*   By: widraugr <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/22 11:38:45 by widraugr          #+#    #+#             */
-/*   Updated: 2019/04/22 16:39:33 by widraugr         ###   ########.fr       */
+/*   Updated: 2019/04/26 14:10:16 by widraugr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,19 +63,23 @@ void	print_fon(t_vis *vis)
 			vis->col * (vis->width + 1));
 	vis->y_it = y;
 	vis->x_it = x;
-	//print_score(vis);
 	while (++i < vis->row)
 	{
 		j = -1;
 		while (++j < vis->col)
 		{
-		//put_square(vis, i, j);
-		if (vis->map[i][j] == '.')
-			mlx_put_image_to_window(vis->mlx_ptr, vis->win_ptr,
-					vis->img_bourd, vis->x_it, vis->y_it);
-				vis->x_it += vis->width + 1;
-			}
+			if (vis->map[i][j] == '.')
+				mlx_put_image_to_window(vis->mlx_ptr, vis->win_ptr,
+						vis->img_bourd, vis->x_it, vis->y_it);
+			vis->x_it += vis->width + 1;
+		}
 		vis->x_it = x;
 		vis->y_it += (vis->heith + 1);
 	}
+}
+
+int		close_win(void)
+{
+	err_sys("Close window.\n");
+	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: widraugr <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/22 11:33:06 by widraugr          #+#    #+#             */
-/*   Updated: 2019/04/22 16:39:25 by widraugr         ###   ########.fr       */
+/*   Updated: 2019/04/26 14:10:19 by widraugr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,12 +94,7 @@ void	print_score(t_vis *vis)
 
 void	put_square(t_vis *vis, int i, int j)
 {
-	static int bl = 1;
-
-/*	if (vis->map[i][j] == '.' && bl)
-		mlx_put_image_to_window(vis->mlx_ptr, vis->win_ptr,
-				vis->img_bourd, vis->x_it, vis->y_it);
-	else*/	if (vis->map[i][j] == 'X')
+	if (vis->map[i][j] == 'X')
 		mlx_put_image_to_window(vis->mlx_ptr, vis->win_ptr,
 				vis->img_xr, vis->x_it, vis->y_it);
 	else	if (vis->map[i][j] == 'x')

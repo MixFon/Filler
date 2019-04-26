@@ -6,7 +6,7 @@
 /*   By: widraugr <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/08 14:27:00 by widraugr          #+#    #+#             */
-/*   Updated: 2019/04/22 15:48:39 by widraugr         ###   ########.fr       */
+/*   Updated: 2019/04/26 13:42:14 by widraugr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,7 @@ void				parsing_wh(char *line, int *width, int *heith);
 char				**infill_arr(int hieth, int iter);
 void				print_arr(char **arr);
 void				dell_arr(char **arr);
+void				err_sys(char *err);
 /*
 ** File add_list.c
 */
@@ -87,4 +88,8 @@ t_bourd				*read_sym(void);
 void				dell(t_bourd *br, t_token *tk);
 int					main(void);
 void				enemy_perimetr(t_bourd *br);
+/*
+** File main.c
+*/
+void	parsing_infillarr(char *line, t_bourd *br);
 #endif

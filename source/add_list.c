@@ -6,7 +6,7 @@
 /*   By: widraugr <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/22 12:57:14 by widraugr          #+#    #+#             */
-/*   Updated: 2019/04/22 13:22:56 by widraugr         ###   ########.fr       */
+/*   Updated: 2019/04/26 10:59:16 by widraugr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ t_token	*create_token(void)
 	char	*line;
 
 	if (!(tk = (t_token *)malloc(sizeof(t_token))))
-		return (NULL);
+		err_sys("Error malloc in infill_arr");
 	get_next_line(0, &line);
 	parsing_wh(line, &tk->width, &tk->heith);
 	ft_strdel(&line);
@@ -92,7 +92,7 @@ t_clst	*creat_clst(void)
 	t_clst	*new;
 
 	if (!(new = (t_clst *)malloc(sizeof(t_clst))))
-		return (NULL);
+		err_sys("Error malloc in creat_clst");
 	new->x_list = 0;
 	new->y_list = 0;
 	new->next = NULL;

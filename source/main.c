@@ -6,7 +6,7 @@
 /*   By: widraugr <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/04 13:45:41 by widraugr          #+#    #+#             */
-/*   Updated: 2019/04/22 15:48:33 by widraugr         ###   ########.fr       */
+/*   Updated: 2019/04/26 11:24:04 by widraugr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,15 +74,12 @@ t_bourd		*read_sym(void)
 	char	*line;
 
 	if (!(br = (t_bourd *)malloc(sizeof(t_bourd))))
-		return (NULL);
+		err_sys("Error malloc in read_sym.\n");
 	init_start_cor(br);
 	if (get_next_line(0, &line) == 0)
 		return (NULL);
 	if (ft_strncmp(line, "$$$ exec p", 10))
-	{
-		write(1, "Error name playr.\n", 18);
-		exit(1);
-	}
+		err_sys("Error name playr.\n");
 	if (line[10] == '1')
 	{
 		br->sym = 'O';
@@ -117,21 +114,22 @@ int			main(void)
 	t_token	*tk;
 	char	*line;
 
-	br = read_sym();
+	if (!(br = read_sym()))
+		err_sys("Error create bourd.\n");
 	while (1)
 	{
-		get_next_line(0, &line);
-		parsing_wh(line, &br->width, &br->heith);
-		ft_strdel(&line);
-		get_next_line(0, &line);
-		ft_strdel(&line);
-		br->bourd = infill_arr(br->heith, 4);
+		if (!(get_next_line(0, &line)))
+		{
+			ft_strdel(&line);
+			err_sys("Normal exit.\n");
+		}
+		parsing_infillarr(line, br);
 		if (!(tk = create_token()))
-			exit(0);
+			err_sys("Error create token.\n");
 		if (!read_bourd(br, tk))
 		{
 			ft_printf("%d %d\n", 0, 0);
-			exit(0);
+			err_sys("Normal exit.\n");
 		}
 		dell(br, tk);
 	}

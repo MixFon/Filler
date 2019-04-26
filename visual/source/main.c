@@ -6,7 +6,7 @@
 /*   By: widraugr <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/22 10:45:01 by widraugr          #+#    #+#             */
-/*   Updated: 2019/04/22 16:39:37 by widraugr         ###   ########.fr       */
+/*   Updated: 2019/04/26 14:10:30 by widraugr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,7 +87,7 @@ t_vis	*create_vis(void)
 int		exit_key(int key)
 {
 	if (key == ESC)
-		exit(0);
+		err_sys("Normal exit visuzal.\n");
 	return (0);
 }
 
@@ -101,5 +101,6 @@ int		main(void)
 	mlx_key_hook(vis->win_ptr, exit_key, (void*)0);
 	print_fon(vis);
 	mlx_loop_hook(vis->mlx_ptr, print_bourd, vis);
+	mlx_hook(vis->win_ptr, 17, 0, close_win, (void*)0);
 	mlx_loop(vis->mlx_ptr);
 }

@@ -6,7 +6,7 @@
 /*   By: widraugr <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/22 10:52:13 by widraugr          #+#    #+#             */
-/*   Updated: 2019/04/22 16:39:40 by widraugr         ###   ########.fr       */
+/*   Updated: 2019/04/26 14:10:20 by widraugr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,6 @@ int		read_input(t_vis *vis)
 	}
 	return (0);
 }
-
 
 /*
 ** Print matrics of rectengle. Starn coordinate matrics (x, y).

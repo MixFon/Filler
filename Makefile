@@ -6,13 +6,15 @@ FILE_C = \
 		 source/search_sharp.c\
 		 source/infill_arr.c\
 		 source/main.c\
+		 source/source.c
 
 FILE_O =\
 	   	add_list.o\
 	   	infill_perimetr.o\
 	   	main.o\
 	   	search_sharp.o\
-	   	infill_arr.o 
+		infill_arr.o\
+		source.o
 
 FILE_LIB =  -L libft/ -lftprintf
 
@@ -31,9 +33,9 @@ $(NAME):
 	make clean -C visual
 	
 clean:
-	/bin/rm -f $(FILE_O) 
-	
+	/bin/rm -f $(FILE_O) 	
+
 fclean: clean 
-	/bin/rm -f $(NAME)
-	
+	/bin/rm -f $(NAME) 	
+
 re: fclean all 

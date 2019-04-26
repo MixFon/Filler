@@ -6,7 +6,7 @@
 /*   By: widraugr <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/22 12:08:34 by widraugr          #+#    #+#             */
-/*   Updated: 2019/04/22 16:39:27 by widraugr         ###   ########.fr       */
+/*   Updated: 2019/04/26 14:10:17 by widraugr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -133,4 +133,5 @@ char				**crea_color_map(int heith, int width, const char *color);
 void				score(char *line, int *score_o, int *score_x);
 void				delete_map_square(t_vis *vis);
 void				print_fon(t_vis *vis);
+int					close_win(void);
 #endif

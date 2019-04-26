@@ -6,7 +6,7 @@
 /*   By: widraugr <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/22 13:21:45 by widraugr          #+#    #+#             */
-/*   Updated: 2019/04/22 15:48:36 by widraugr         ###   ########.fr       */
+/*   Updated: 2019/04/26 10:58:39 by widraugr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,8 @@ char	**infill_arr(int hieth, int iter)
 	char	*line;
 	char	**arr;
 
-	arr = (char **)malloc(sizeof(char*) * (hieth + 1));
+	if(!(arr = (char **)malloc(sizeof(char*) * (hieth + 1))))
+		err_sys("Error malloc in infill_arr");
 	i = -1;
 	while (++i < hieth)
 	{
@@ -84,4 +85,14 @@ void	dell_arr(char **arr)
 		free(*arr);
 		arr++;
 	}
+}
+
+/*
+** Input error of.
+*/
+
+void	err_sys(char *err)
+{
+	write(2, err, ft_strlen(err));
+	exit(0);
 }
