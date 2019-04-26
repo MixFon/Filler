@@ -6,7 +6,7 @@
 /*   By: widraugr <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/22 10:50:51 by widraugr          #+#    #+#             */
-/*   Updated: 2019/04/26 14:10:23 by widraugr         ###   ########.fr       */
+/*   Updated: 2019/04/26 14:39:54 by widraugr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ void	new_map(t_vis *vis)
 	int i;
 
 	i = -1;
-	if(!(vis->map = (char **)malloc(sizeof(char*) * (vis->row + 1))))
+	if (!(vis->map = (char **)malloc(sizeof(char*) * (vis->row + 1))))
 		err_sys("Error malloc in mew_map\n");
 	while (++i < vis->row)
 		vis->map[i] = ft_strnew(vis->col);
@@ -79,7 +79,7 @@ char	**crea_color_map(int heith, int width, const char *color)
 	int		i;
 	int		j;
 
-	if(!(map = (char **)malloc(sizeof(char *) * (heith + 3))))
+	if (!(map = (char **)malloc(sizeof(char *) * (heith + 3))))
 		err_sys("Error malloc crea_color_map");
 	map[0] = ft_multi_strdup(4, ft_itoa(width), " ", ft_itoa(heith), " 1 1 ");
 	map[1] = ft_multi_strdup(2, "b c #", color);
