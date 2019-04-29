@@ -6,7 +6,7 @@
 /*   By: widraugr <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/22 12:08:34 by widraugr          #+#    #+#             */
-/*   Updated: 2019/04/26 14:10:17 by widraugr         ###   ########.fr       */
+/*   Updated: 2019/04/29 12:56:53 by widraugr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,7 +86,6 @@ typedef struct		s_vis
 	char			**map_obd;
 	char			**map_obl;
 	char			**map_bourd;
-	char			**map_back;
 	char			**map_score;
 	char			name_o[30];
 	char			name_x[30];
@@ -101,7 +100,7 @@ typedef struct		s_vis
 char				*last_name(char *name, char *line);
 void				get_name_players(t_vis *vis, char *line);
 t_vis				*create_vis(void);
-int					exit_key(int key);
+int					exit_key(int key, t_vis *vis);
 int					main(void);
 /*
 ** File init.c

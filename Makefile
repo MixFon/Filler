@@ -27,8 +27,8 @@ all : $(NAME)
 $(NAME):
 	make re -C libft
 	make re -C visual
-	gcc -g $(FLAGS) $(HFILES) -c $(FILE_C) 
-	gcc -g $(FLAFS) $(FILE_C) $(FILE_LIB) -o $(NAME)
+	gcc $(FLAGS) $(HFILES) -c $(FILE_C) 
+	gcc $(FLAFS) $(FILE_C) $(FILE_LIB) -o $(NAME)
 	make clean -C libft
 	make clean -C visual
 	

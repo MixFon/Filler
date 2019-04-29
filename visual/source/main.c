@@ -6,7 +6,7 @@
 /*   By: widraugr <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/22 10:45:01 by widraugr          #+#    #+#             */
-/*   Updated: 2019/04/26 14:10:30 by widraugr         ###   ########.fr       */
+/*   Updated: 2019/04/29 12:59:46 by widraugr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,6 +76,7 @@ t_vis	*create_vis(void)
 		}
 		ft_strdel(&line);
 	}
+	ft_strdel(&line);
 	init_image(vis);
 	return (vis);
 }
@@ -84,10 +85,15 @@ t_vis	*create_vis(void)
 ** If pressed key esc close programm.
 */
 
-int		exit_key(int key)
+int		exit_key(int key, t_vis *vis)
 {
 	if (key == ESC)
+	{
+		dell_arr(vis->map);
+		free(vis->map);
+		free(vis);
 		err_sys("Normal exit visuzal.\n");
+	}
 	return (0);
 }
 
@@ -98,7 +104,7 @@ int		main(void)
 	if (!(vis = create_vis()))
 		exit(0);
 	mlx_put_image_to_window(vis->mlx_ptr, vis->win_ptr, vis->img_back, 0, 0);
-	mlx_key_hook(vis->win_ptr, exit_key, (void*)0);
+	mlx_key_hook(vis->win_ptr, exit_key, vis);
 	print_fon(vis);
 	mlx_loop_hook(vis->mlx_ptr, print_bourd, vis);
 	mlx_hook(vis->win_ptr, 17, 0, close_win, (void*)0);

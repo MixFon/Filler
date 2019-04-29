@@ -19,8 +19,8 @@ FLSGS = -Wall -Wextra -Werror
 all : $(NAME)
 
 $(NAME):
-	gcc -g $(FLAGS) $(HFILES) -c $(FILE_C) 
-	gcc -g $(FLAFS) $(FILE_C) $(FILE_LIB) -o $(NAME)
+	gcc $(FLAGS) $(HFILES) -c $(FILE_C) 
+	gcc $(FLAFS) $(FILE_C) $(FILE_LIB) -o $(NAME)
 	
 clean:
 	/bin/rm -f $(FILE_O) 

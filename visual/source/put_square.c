@@ -6,7 +6,7 @@
 /*   By: widraugr <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/22 11:33:06 by widraugr          #+#    #+#             */
-/*   Updated: 2019/04/26 14:10:19 by widraugr         ###   ########.fr       */
+/*   Updated: 2019/04/29 12:56:51 by widraugr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,6 +76,11 @@ void	coor_centr(int *x, int *y, int heith, int width)
 
 void	print_score(t_vis *vis)
 {
+	char *score_o;
+	char *score_x;
+
+	score_o = ft_itoa(vis->score_o);
+	score_x = ft_itoa(vis->score_x);
 	mlx_put_image_to_window(vis->mlx_ptr, vis->win_ptr,
 			vis->img_score, 900, 660);
 	mlx_string_put(vis->mlx_ptr, vis->win_ptr, 920, 695, 0x2056B6,
@@ -83,9 +88,11 @@ void	print_score(t_vis *vis)
 	mlx_string_put(vis->mlx_ptr, vis->win_ptr, 920, 670, 0xBF2956,
 			vis->name_x);
 	mlx_string_put(vis->mlx_ptr, vis->win_ptr, 1200, 695, 0x2056B6,
-			ft_itoa(vis->score_o));
+			score_o);
 	mlx_string_put(vis->mlx_ptr, vis->win_ptr, 1200, 670, 0xBF2956,
-		ft_itoa(vis->score_x));
+			score_x);
+	free(score_o);
+	free(score_x);
 }
 
 /*

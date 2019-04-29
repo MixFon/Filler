@@ -6,7 +6,7 @@
 /*   By: widraugr <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/22 10:52:13 by widraugr          #+#    #+#             */
-/*   Updated: 2019/04/26 14:10:20 by widraugr         ###   ########.fr       */
+/*   Updated: 2019/04/29 12:56:49 by widraugr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,11 +24,15 @@ int		read_input(t_vis *vis)
 	while (get_next_line(0, &line))
 	{
 		if (*line == '<')
+		{
+			ft_strdel(&line);
 			return (0);
+		}
 		if (!ft_strncmp(line, "    0", 5))
 			rewrite_arr(vis);
 		ft_strdel(&line);
 	}
+	ft_strdel(&line);
 	return (0);
 }
 
@@ -112,7 +116,6 @@ void	init_val(t_vis *vis)
 	vis->map_obd = NULL;
 	vis->map_obl = NULL;
 	vis->map_bourd = NULL;
-	vis->map_back = NULL;
 	ft_memset(vis->name_o, '\0', 30);
 	ft_memset(vis->name_x, '\0', 30);
 	vis->score_o = 0;
